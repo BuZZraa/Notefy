@@ -23,10 +23,13 @@ const NotesSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "userdetails",
-        required: true
+        required: false // Need to be changed to true after adding session
     }, 
     
-    notes: [NoteSchema],
+    notes: {
+        type: NoteSchema,
+        required: true
+    },
     tasks: [{
         type: String,
         required: true

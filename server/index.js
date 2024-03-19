@@ -2,9 +2,11 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import UsersModel from "./models/Users.js";
+import NotesModel from "./models/Notes.js";
 import bodyParser from "body-parser";
 import bcrypt from "bcrypt";
 import validator from "email-validator";
+import session from "express-session";
 import 'dotenv/config';
 
 const app = express();
@@ -14,6 +16,12 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect(process.env.DATABASE);
+app.use(session({
+  secret: 'your-secret-key', // Secret used to sign the session ID cookie
+  resave: false, // Save session data on every request, even if it hasn't changed
+  saveUninitialized: true, // Save new sessions that haven't been modified
+  // You can configure other options like store, cookie, etc.
+}));
 
 app.post("/register", async (req, res) => {
   try {
@@ -83,7 +91,9 @@ app.post("/login", async (req, res) => {
 
     bcrypt.compare(password, user.password).then((result) => {
       if (result === true) {
-        res.json({ message: "Success" });
+        req.session.userId = user._id;
+        console.log(req.session.userId)
+        res.json({ message: "Success", user:user._id });
       } 
       
       else {
@@ -101,6 +111,47 @@ app.post("/login", async (req, res) => {
       .json({
         message: "An unexpected error occurred. Please try again later.",
       });
+  }
+});
+
+
+app.post("/addnote", async (req, res) => {
+  try {
+    // Check if userId exists in session
+    console.log(req.session.userId)
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Unauthorized. Please login." });
+    }
+
+    // Create a note for the user
+    const newNote = await NotesModel.create({
+      userId: req.session.userId, // Assign the userId from session
+      notes: req.body, // Use the entire req.body as the note
+    });
+
+    return res.status(201).json(newNote);
+  } catch (error) {
+    console.error("Error adding note:", error);
+    return res
+      .status(500)
+      .json({ message: "An unexpected error occurred. Please try again later." });
+  }
+});
+
+app.post('/logout', (req, res) => {
+  try {
+    // Destroy the session associated with the user
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Session destroy error:', err);
+        return res.status(500).json({ message: 'Logout failed' });
+      }
+      // Session destroyed successfully
+      return res.status(200).json({ message: 'Logout successful' });
+    });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ message: 'Logout failed' });
   }
 });
 

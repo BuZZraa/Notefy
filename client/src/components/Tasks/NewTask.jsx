@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {ToastContainer} from "react-toastify";
-import errorNotification from "../../utils/ErrorNotification.js"
+import errorNotification from "../../utils/notification.js"
 
 function NewTask({ onAdd }) {
   const [enteredTask, setEnteredTask] = useState("");

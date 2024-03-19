@@ -4,10 +4,13 @@ import { useNavigate } from "react-router-dom";
 import FormInput from "./FormInput";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import errorNotification from "../../utils/ErrorNotification";
+import errorNotification from "../../utils/notification";
+import { useDispatch } from "react-redux";
+import { userActions } from "../../store/userStore";
 
 function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -17,7 +20,8 @@ function Login() {
       .post("http://localhost:3000/login", formData)
       .then((response) => {
         if (response.data.message === "Success") {
-          navigate("/notefy");
+          navigate("/notefy")
+          dispatch(userActions.setUser(response.data.user));
         }
       })
 

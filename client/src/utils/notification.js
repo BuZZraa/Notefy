@@ -7,3 +7,11 @@ export default function errorNotification(errorMessage) {
     theme: "colored"
     });
 }
+
+export function successNotification(successMessage) {
+    toast.success(successMessage, {
+        toastId: successMessage,
+        closeOnClick: true,
+        theme: "colored"
+    })
+}
