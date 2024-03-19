@@ -9,6 +9,7 @@ import Login from "./components/Form/Login.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PageNotFound from "./components/PageNotFound.jsx"
 import SecureRoute from "./utils/SecureRoute.jsx"
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [projectsState, setProjectState] = useState({
@@ -135,6 +136,7 @@ function App() {
           { path: "/notefy", element: 
               <SecureRoute element={
                 <main className="h-screen my-8 flex gap-8">
+                  <ToastContainer position="bottom-right" closeOnClick />
                   <NotesSidebar
                     onStartAddProject={handleStartAddProject}
                     projects={projectsState.projects}
