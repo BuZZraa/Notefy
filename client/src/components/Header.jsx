@@ -1,20 +1,16 @@
-import { NavLink, useNavigate  } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch} from "react-redux";
 import { userActions } from "../store/userStore";
 import axios from "axios";
-import { ToastContainer } from "react-toastify";
 import errorNotification, { successNotification } from "../utils/notification";
 
 function Header() {
   const userId = useSelector(state => state.userId);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   function handleLogout() {
     axios.post("http://localhost:3000/logout")
       .then(response => {
-        successNotification(response.message);
         dispatch(userActions.logout());
-        navigate("/login", { replace: true });
       })
       
       .catch((error) => {
@@ -25,8 +21,7 @@ function Header() {
     <header>
       <div className="bg-indigo-500 border-b border-gray-200">
         <div className="px-4 mx-auto sm:px-6 lg:px-8">
-        <ToastContainer newestOnTop position="bottom-right" />
-          <nav className="relative flex items-center justify-between h-16 lg:h-20">
+          <nav className="relative flex items-center justify-between h-16 lg:h-20">        
             <div className="lg:flex lg:items-center lg:space-x-10">
               <NavLink
                 to=".."
@@ -71,16 +66,17 @@ function Header() {
                     Log in
                   </NavLink>
                 </>) : 
-                <button 
-                  onClick={handleLogout}
-                  className="text-base font-medium text-indigo-500 bg-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-stone-100"
-                >
+                  <button 
+                    onClick={handleLogout}
+                    type="submit"
+                    className="text-base font-medium text-indigo-500 bg-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-stone-100"
+                  >
                   Logout
-                </button> }
+                </button>}
             </div>
           </nav>
         </div>
-      </div>
+      </div>   
     </header>
   );
 }
