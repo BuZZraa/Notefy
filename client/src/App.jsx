@@ -8,6 +8,8 @@ import Register from "./components/Form/Register.jsx";
 import Login from "./components/Form/Login.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PageNotFound from "./components/PageNotFound.jsx"
+import SecureRoute from "./utils/SecureRoute.jsx"
+
 function App() {
   const [projectsState, setProjectState] = useState({
     selectedProjectId: undefined,
@@ -122,7 +124,6 @@ function App() {
   } else if (projectsState.selectedProjectId === undefined) {
     content = <NoteNotSelected onStartAddProject={handleStartAddProject} />;
   }
-
   const router = createBrowserRouter([
       {
         path: "/", 
@@ -132,15 +133,17 @@ function App() {
           { index: true, element: <Register /> },
           { path: "/login", element: <Login /> },
           { path: "/notefy", element: 
-              <main className="h-screen my-8 flex gap-8">
-                <NotesSidebar
-                  onStartAddProject={handleStartAddProject}
-                  projects={projectsState.projects}
-                  onSelectProject={handleSelectProject}
-                  selectedProjectId={projectsState.selectedProjectId}
-                />
-                {content}
-              </main>
+              <SecureRoute element={
+                <main className="h-screen my-8 flex gap-8">
+                  <NotesSidebar
+                    onStartAddProject={handleStartAddProject}
+                    projects={projectsState.projects}
+                    onSelectProject={handleSelectProject}
+                    selectedProjectId={projectsState.selectedProjectId}
+                  />
+                  {content}
+                </main>}
+               />
           }
         ]
       }

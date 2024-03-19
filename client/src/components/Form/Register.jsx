@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import FormInput from "./FormInput";
-import errorNotification from "../../utils/ErrorNotification";
+import errorNotification from "../../utils/notification";
 import { ToastContainer } from "react-toastify";
 
 function Register() {

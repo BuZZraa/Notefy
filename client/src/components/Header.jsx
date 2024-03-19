@@ -1,55 +1,82 @@
+import { NavLink, useNavigate  } from "react-router-dom";
+import { useSelector, useDispatch} from "react-redux";
+import { userActions } from "../store/userStore";
+import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import errorNotification, { successNotification } from "../utils/notification";
+
 function Header() {
+  const userId = useSelector(state => state.userId);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  function handleLogout() {
+    axios.post("http://localhost:3000/logout")
+      .then(response => {
+        successNotification(response.message);
+        dispatch(userActions.logout());
+        navigate("/login", { replace: true });
+      })
+      
+      .catch((error) => {
+          errorNotification(error.message);
+      });
+  }
   return (
     <header>
-      <div class="bg-indigo-500 border-b border-gray-200">
-        <div class="px-4 mx-auto sm:px-6 lg:px-8">
-          <nav class="relative flex items-center justify-between h-16 lg:h-20">
-            <div class="lg:flex lg:items-center lg:space-x-10">
-              <a
-                href="#"
-                title=""
-                class="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300"
+      <div className="bg-indigo-500 border-b border-gray-200">
+        <div className="px-4 mx-auto sm:px-6 lg:px-8">
+        <ToastContainer newestOnTop position="bottom-right" />
+          <nav className="relative flex items-center justify-between h-16 lg:h-20">
+            <div className="lg:flex lg:items-center lg:space-x-10">
+              <NavLink
+                to=".."
+                relative="route"
+                className="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300"
               >
                 Home
-              </a>
+              </NavLink>
 
-              <a
-                href="#"
-                title=""
-                class="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300"
+              <NavLink
+                to=""
+                className="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300"
               >
                 About
-              </a>
+              </NavLink>
             </div>
 
-            <div class="lg:absolute lg:-translate-x-1/2 lg:inset-y-5 lg:left-1/2">
-              <div class="flex-shrink-0">
+            <div className="lg:absolute lg:-translate-x-1/2 lg:inset-y-5 lg:left-1/2">
+              <div className="flex-shrink-0">
                 <img
-                  class="w-auto h-8 lg:h-10"
+                  className="w-auto h-8 lg:h-10"
                   src="https://merakiui.com/images/full-logo.svg"
                   alt=""
                 />
               </div>
             </div>
 
-            <div class="lg:flex lg:items-center lg:space-x-4">
-              <a
-                href="#"
-                title=""
-                class="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300"
-              >
-                
-                Register
-              </a>
+            <div className="lg:flex lg:items-center lg:space-x-4">
+              {
+                !userId ? (
+                <>
+                  <NavLink
+                    to="/"
+                    className="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300">        
+                    Register
+                  </NavLink>
 
-              <a
-                href="#"
-                title=""
-                class="text-base font-medium text-indigo-500 bg-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-stone-100"
-              >
-                
-                Log in
-              </a>
+                  <NavLink
+                    to="login"
+                    className="text-base font-medium text-indigo-500 bg-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-stone-100"
+                  >
+                    Log in
+                  </NavLink>
+                </>) : 
+                <button 
+                  onClick={handleLogout}
+                  className="text-base font-medium text-indigo-500 bg-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-stone-100"
+                >
+                  Logout
+                </button> }
             </div>
           </nav>
         </div>
