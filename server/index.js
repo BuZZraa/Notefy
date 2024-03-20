@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect(process.env.DATABASE);
 app.use(session({
-  secret: 'your-secret-key', // Secret used to sign the session ID cookie
+  secret: process.env.KEY, // Secret used to sign the session ID cookie
   resave: false, // Save session data on every request, even if it hasn't changed
   saveUninitialized: true, // Save new sessions that haven't been modified
   // You can configure other options like store, cookie, etc.
