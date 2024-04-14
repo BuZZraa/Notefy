@@ -89,52 +89,23 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid login credentials." });
     }
 
-    bcrypt.compare(password, user.password).then((result) => {
-      if (result === true) {
-        req.session.userId = user._id;
-        console.log(req.session.userId)
-        res.json({ message: "Success", user:user._id });
-      } 
-      
-      else {
-        res
-          .status(401)
-          .json({ message: "The password you entered is incorrect." });
-      }
-    });
-  } 
-  
-  catch (error) {
+    // Compare the password using bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res
+        .status(401)
+        .json({ message: "The password you entered is incorrect." });
+    }
+
+    req.session.userId = user._id;
+    return res.json({ message: "Success", user: user._id });
+  } catch (error) {
     console.error("Login error:", error);
-    res
+    return res
       .status(500)
       .json({
         message: "An unexpected error occurred. Please try again later.",
       });
-  }
-});
-
-
-app.post("/addnote", async (req, res) => {
-  try {
-    // Check if userId exists in session
-    console.log(req.session.userId)
-    if (!req.session.userId) {
-      return res.status(401).json({ message: "Unauthorized. Please login." });
-    }
-
-    // Create a note for the user
-    const newNote = await NotesModel.create({
-      userId: req.session.userId, // Assign the userId from session
-      notes: req.body, // Use the entire req.body as the note
-    });
-
-    return res.status(201).json(newNote);
-  } catch (error) {
-    console.error("Error adding note:", error);
-    return res
-      .status(500)
-      .json({ message: "An unexpected error occurred. Please try again later." });
   }
 });
 
@@ -152,6 +123,48 @@ app.post('/logout', (req, res) => {
   } catch (error) {
     console.error('Logout error:', error);
     res.status(500).json({ message: 'Logout failed' });
+  }
+});
+
+app.post("/addnote", async (req, res) => {
+  try {
+    if (!req.headers.authorization) {
+      return res.status(401).json({ message: "Unauthorized. Please login." });
+    }
+
+    // Create a note for the user
+    const id = req.headers.authorization.slice(7)
+    const newNote = await NotesModel.create({
+      userId: id, // Assign the userId from session
+      notes: req.body, // Use the entire req.body as the note
+    });
+
+    return res.status(201).json(newNote);
+  } catch (error) {
+    console.error("Error adding note:", error);
+    return res
+      .status(500)
+      .json({ message: "An unexpected error occurred. Please try again later." });
+  }
+});
+
+app.get("/getnotes", async(req, res) => {
+  const id = req.headers.authorization.slice(7)
+  
+  try {
+    if (!req.headers.authorization) {
+      return res.status(401).json({ message: "Unauthorized. Please login." });
+    }
+
+    const notes = await NotesModel.find({ userId: id });
+    return res.json({ message: "Success", notes: notes});
+  }
+
+  catch (error) {
+    console.error("Error adding note:", error);
+    return res
+      .status(500)
+      .json({ message: "An unexpected error occurred. Please try again later." });
   }
 });
 
