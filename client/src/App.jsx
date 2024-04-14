@@ -7,9 +7,10 @@ import SelectedNote from "./components/Note/SelectedNote.jsx";
 import Register from "./components/Form/Register.jsx";
 import Login from "./components/Form/Login.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import PageNotFound from "./components/PageNotFound.jsx"
-import SecureRoute from "./utils/SecureRoute.jsx"
+import PageNotFound from "./components/PageNotFound.jsx";
+import SecureRoute from "./utils/SecureRoute.jsx";
 import { ToastContainer } from "react-toastify";
+
 
 function App() {
   const [projectsState, setProjectState] = useState({
@@ -126,15 +127,18 @@ function App() {
     content = <NoteNotSelected onStartAddProject={handleStartAddProject} />;
   }
   const router = createBrowserRouter([
-      {
-        path: "/", 
-        element: <RootLayout />, 
-        errorElement: <PageNotFound />,
-        children: [
-          { index: true, element: <Register /> },
-          { path: "/login", element: <Login /> },
-          { path: "/notefy", element: 
-              <SecureRoute element={
+    {
+      path: "/",
+      element: <RootLayout />,
+      errorElement: <PageNotFound />,
+      children: [
+        { index: true, element: <Register /> },
+        { path: "/login", element: <Login /> },
+        {
+          path: "/notefy",
+          element: (
+            <SecureRoute
+              element={
                 <main className="h-screen my-8 flex gap-8">
                   <ToastContainer position="bottom-right" closeOnClick />
                   <NotesSidebar
@@ -144,11 +148,13 @@ function App() {
                     selectedProjectId={projectsState.selectedProjectId}
                   />
                   {content}
-                </main>}
-               />
-          }
-        ]
-      }
+                </main>
+              }    
+            />           
+          )
+        },
+      ],
+    },
   ]);
 
   return <RouterProvider router={router} />;
