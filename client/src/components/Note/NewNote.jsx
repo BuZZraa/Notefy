@@ -4,6 +4,8 @@ import SpeechToTextConverter from "../SpeechToTextConverter.jsx";
 import errorNotification from "../../utils/notification.js";
 import { ToastContainer } from "react-toastify";
 import axios from "axios";
+import { useSelector } from "react-redux";
+
 
 function NewNote({onAdd, onCancel}) {
     const title = useRef();
@@ -11,7 +13,7 @@ function NewNote({onAdd, onCancel}) {
     const dueDate = useRef();
     const cancelButtonRef = useRef();
     const saveButtonRef = useRef();
-
+    const userId = useSelector(state => state.userId);
     function handleCommand(command) {
         const lowerCommand = command.toLowerCase();
         if (lowerCommand.includes('add title')) {
@@ -33,12 +35,10 @@ function NewNote({onAdd, onCancel}) {
           } 
 
         else if (lowerCommand.includes('cancel')) {
-            // Trigger cancel button click
             cancelButtonRef.current.click();
         } 
 
         else if (lowerCommand.includes('done')) {
-            // Trigger cancel button click
             saveButtonRef.current.click();
         } 
 
@@ -63,11 +63,13 @@ function NewNote({onAdd, onCancel}) {
             dueDate: enteredDueDate
         });
 
-        console.log(sessionStorage.getItem("user"))
         axios
-      .post("http://localhost:3000/addnote", formData)
-      .catch((error) => {
-        console.log(error);
+        .post("http://localhost:3000/addnote", formData, {
+            headers: {
+              "Authorization": `Bearer ${userId}` // Assuming userId is the user ID
+            }
+          })
+        .catch((error) => {
         if (error.response) {
           let errorMessage = error.response.data.message;
           errorNotification(errorMessage);
@@ -100,9 +102,10 @@ function NewNote({onAdd, onCancel}) {
                                 Cancel
                             </button>
                         </li>
-                        <SpeechToTextConverter onCommand={handleCommand} className="px-6 py-2 rounded-md bg-blue-600 text-stone-100 hover:bg-blue-700"/>
+                        <SpeechToTextConverter type="button" onCommand={handleCommand} className="px-6 py-2 rounded-md bg-blue-600 text-stone-100 hover:bg-blue-700"/>
                         <li>
-                            <button                           
+                            <button       
+                                type="submit"                    
                                 className="px-6 py-2 rounded-md bg-green-600 text-stone-100 hover:bg-green-700"
                                 ref={saveButtonRef}>
                                 Save
