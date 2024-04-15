@@ -9,7 +9,7 @@ import { noteActions } from "../../store/userStore.js";
 function ProjectSidebar() {
     const userId = useSelector(state => state.user.userId);
     const noteId = useSelector(state => state.note.noteId);
-    const [notes, setNotes] = useState([]);
+    const [notes, setNotes] = useState([{ notes: { _id: 'dummy_id', title: 'Dummy Note' } }]);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -52,7 +52,7 @@ function ProjectSidebar() {
                 </Button>
             </div>
             <ul className="mt-8">
-                { 
+                {   notes && notes.length >= 1 && (
                     notes.map((note) =>  {
                     let cssClasses = "w-full text-left px-2 py-2 rounded-md my-1 font-semibold hover:border-white hover:border-2 hover:text-white hover:bg-indigo-800";                 
 
@@ -72,7 +72,8 @@ function ProjectSidebar() {
                           {capitalize(note.notes.title)}
                         </button>
                     </li>);
-                })}
+                }))                
+                }
             </ul>
         </aside>
     )
