@@ -14,6 +14,7 @@ import ForgotPassword from "./components/PasswordReset/ForgotPassword.jsx";
 import ResetPassword from "./components/PasswordReset/ResetPassword.jsx";
 import EnterCode from "./components/PasswordReset/EnterCode.jsx";
 import SecureForgotPassword from "./utils/SecureForgotPassword.jsx";
+import AboutUs from "./components/AboutUs.jsx";
 
 function App() {
   const noteId = useSelector(state => state.note.noteId);
@@ -56,6 +57,7 @@ function App() {
             />           
           )
         },
+        { path: "aboutus", element: <AboutUs />},
         { path: "forgotPassword", element: <ForgotPassword /> },
         { path: "enterCode", element: <SecureForgotPassword element={<EnterCode />} /> },
         { path: "resetPassword", element: <SecureForgotPassword element={<ResetPassword />} /> }

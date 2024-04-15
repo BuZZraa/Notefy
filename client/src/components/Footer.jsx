@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className="bg-indigo-500 border-gray-200">
+    <footer className="bg-gradient-to-r from-blue-400 to-purple-500 border-gray-200">
       <div className="container flex flex-col items-center justify-between p-6 mx-auto space-y-4 sm:space-y-0 sm:flex-row">
         <img
           className="w-auto h-7"
