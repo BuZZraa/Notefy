@@ -1,11 +1,13 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Tasks from "../Tasks/Tasks.jsx";
 import { capitalize } from "lodash";
 import { useEffect, useState } from "react";
-import errorNotification from "../../utils/notification.js";
+import errorNotification, { successNotification } from "../../utils/notification.js";
 import axios from "axios";
+import { noteActions } from "../../store/userStore.js";
 
 function SelectedProject() {
+  const dispatch = useDispatch()
   const noteId = useSelector(state => state.note.noteId);
   const userId = useSelector(state => state.user.userId);
   const [currentNote, setCurrentNote] = useState({notes: {
@@ -13,6 +15,7 @@ function SelectedProject() {
     description: "loading...",
     dueDate: "2024-01-01"
   }})
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,7 +37,21 @@ function SelectedProject() {
   fetchData();
   }, [noteId]);
 
-  console.log(currentNote.notes.title)
+  function deleteNote() {
+    try {
+        const response = axios.post("http://localhost:3000/deleteNote", {id: noteId}, {
+          headers: {
+            "Authorization": `Bearer ${userId}` 
+          }
+        });
+    }
+ 
+    catch(error) {
+      errorNotification(error);
+    }
+    dispatch(noteActions.setNoteId(undefined))
+  }
+
   const formattedDate = new Date(currentNote.notes.dueDate).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -50,7 +67,7 @@ function SelectedProject() {
           </h1>
           <button
             className= "bg-red-700 px-4 py-2 rounded-md text-white hover:bg-red-800"
-            onClick={console.log("")}
+            onClick={deleteNote}
           >
             Delete Note
           </button>
