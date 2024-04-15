@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import errorNotification from "../../utils/notification";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../store/userStore";
+import { Link } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ function Login() {
 
   return (
     <div className="flex items-center justify-center my-8 space-x-20">
-      <ToastContainer newestOnTop position="bottom-right" />
+      <ToastContainer newestOnTop position="bottom-right" closeOnClick/>
       <div className="w-1/4 h-full p-4">
         <img
           src={noteVector}
@@ -71,9 +72,9 @@ function Login() {
         </form>
         <p className="mt-4 text-sm text-gray-600">
           Forgot your password?{" "}
-          <a href="#" className="text-indigo-800 hover:underline">
+          <Link to="/forgotPassword" className="text-indigo-800 hover:underline">
             Reset
-          </a>
+          </Link>
         </p>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Button from "../Button.jsx"
+import Button from "../Form/Button.jsx"
 import { capitalize } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";

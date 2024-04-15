@@ -1,8 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import Tasks from "../Tasks/Tasks.jsx";
 import { capitalize } from "lodash";
 import { useEffect, useState } from "react";
-import errorNotification, { successNotification } from "../../utils/notification.js";
+import errorNotification from "../../utils/notification.js";
 import axios from "axios";
 import { noteActions } from "../../store/userStore.js";
 
@@ -60,7 +59,7 @@ function SelectedProject() {
 
   return (
     <div className="w-[35rem] mt-16 border-2 border-stone-800 p-5 h-fit rounded-md">
-      <div className="pb-4 mb-4 border-b-2 border-stone-400">
+      <div className="pb-4 mb-4">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold mb-2">
             {capitalize(currentNote.notes.title)}
@@ -77,7 +76,6 @@ function SelectedProject() {
           {currentNote.notes.description}
         </p>
       </div>
-      <Tasks onAdd={1} onDelete={1} tasks={1} />
     </div>
   );
 }

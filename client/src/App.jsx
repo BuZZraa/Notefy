@@ -1,4 +1,3 @@
-import { useState } from "react";
 import RootLayout from "./components/RootLayout.jsx";
 import NewNote from "./components/Note/NewNote.jsx";
 import NoteNotSelected from "./components/Note/NoteNotSelected.jsx";
@@ -7,43 +6,17 @@ import SelectedNote from "./components/Note/SelectedNote.jsx";
 import Register from "./components/Form/Register.jsx";
 import Login from "./components/Form/Login.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import PageNotFound from "./components/PageNotFound.jsx";
+import PageNotFound from "./components/Error/PageNotFound.jsx";
 import SecureRoute from "./utils/SecureRoute.jsx";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
+import ForgotPassword from "./components/PasswordReset/ForgotPassword.jsx";
+import ResetPassword from "./components/PasswordReset/ResetPassword.jsx";
+import EnterCode from "./components/PasswordReset/EnterCode.jsx";
+import SecureForgotPassword from "./utils/SecureForgotPassword.jsx";
 
 function App() {
   const noteId = useSelector(state => state.note.noteId);
-  const [projectsState, setProjectState] = useState({
-    selectedProjectId: undefined,
-    projects: [],
-    tasks: [],
-  });
-
-  function handleAddTask(text) {
-    setProjectState((prevProjectsState) => {
-      const taskId = Math.random();
-      const newTask = {
-        text: text,
-        projectId: prevProjectsState.selectedProjectId,
-        id: taskId,
-      };
-
-      return {
-        ...prevProjectsState,
-        tasks: [...prevProjectsState.tasks, newTask],
-      };
-    });
-  }
-
-  function handleDeleteTask(id) {
-    setProjectState((prevProjectsState) => {
-      return {
-        ...prevProjectsState,
-        tasks: projectsState.tasks.filter((task) => task.id !== id),
-      };
-    });
-  }
 
   let content = (
     <SelectedNote
@@ -67,9 +40,9 @@ function App() {
       errorElement: <PageNotFound />,
       children: [
         { index: true, element: <Register /> },
-        { path: "/login", element: <Login /> },
+        { path: "login", element: <Login /> },
         {
-          path: "/notefy",
+          path: "notefy",
           element: (
             <SecureRoute
               element={
@@ -83,6 +56,9 @@ function App() {
             />           
           )
         },
+        { path: "forgotPassword", element: <ForgotPassword /> },
+        { path: "enterCode", element: <SecureForgotPassword element={<EnterCode />} /> },
+        { path: "resetPassword", element: <SecureForgotPassword element={<ResetPassword />} /> }
       ],
     },
   ]);

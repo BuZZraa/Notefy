@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import noNotesImage from "../../assets/no-notes.png"
-import Button from "../Button";
+import Button from "../Form/Button";
 import { noteActions } from "../../store/userStore";
 
 function NoteNotSelected() {

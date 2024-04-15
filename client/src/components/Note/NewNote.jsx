@@ -1,6 +1,6 @@
 import NoteInput from "./NoteInput.jsx";
 import { useRef } from "react";
-import SpeechToTextConverter from "../SpeechToTextConverter.jsx";
+import SpeechToTextConverter from "../../utils/SpeechToTextConverter.jsx";
 import errorNotification from "../../utils/notification.js";
 import { ToastContainer } from "react-toastify";
 import axios from "axios";

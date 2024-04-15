@@ -27,10 +27,34 @@ const noteSlice = createSlice({
     }
 });
 
+const forgotPasswordSlice = createSlice({
+    name: "forgotPassword",
+    initialState: {
+        code: null,
+        email: null,
+    },
+    reducers: {
+        setVerificationInfo(state, action) {
+            state.code = action.payload.code;
+            state.email = action.payload.email;
+        },
+
+        clearVerificationInfo(state) {
+            state.code = null,
+            state.email = null
+        }
+    }
+})
+
 const store = configureStore({
-    reducer: { user: userSlice.reducer, note: noteSlice.reducer}
+    reducer: { 
+        user: userSlice.reducer, 
+        note: noteSlice.reducer,
+        forgotPassword: forgotPasswordSlice.reducer
+    }
 });
 
 export const userActions = userSlice.actions;
 export const noteActions = noteSlice.actions;
+export const forgotPasswordActions = forgotPasswordSlice.actions;
 export default store;
