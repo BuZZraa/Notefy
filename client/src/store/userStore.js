@@ -15,9 +15,22 @@ const userSlice = createSlice({
     }
 });
 
+const noteSlice = createSlice({
+    name: "note",
+    initialState: {
+        noteId: undefined
+    },
+    reducers: {
+        setNoteId(state, action) {
+            state.noteId = action.payload
+        }
+    }
+});
+
 const store = configureStore({
-    reducer: userSlice.reducer
+    reducer: { user: userSlice.reducer, note: noteSlice.reducer}
 });
 
 export const userActions = userSlice.actions;
+export const noteActions = noteSlice.actions;
 export default store;

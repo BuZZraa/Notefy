@@ -4,13 +4,18 @@ import SpeechToTextConverter from "../SpeechToTextConverter.jsx";
 import errorNotification from "../../utils/notification.js";
 import { ToastContainer } from "react-toastify";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { noteActions } from "../../store/userStore.js";
 
-function NewNote({onAdd, onCancel}) {
+
+function NewNote() {
     const title = useRef();
     const description = useRef();
     const dueDate = useRef();
     const cancelButtonRef = useRef();
     const saveButtonRef = useRef();
+    const userId = useSelector(state => state.user.userId);
+    const dispatch = useDispatch();
 
     function handleCommand(command) {
         const lowerCommand = command.toLowerCase();
@@ -33,12 +38,10 @@ function NewNote({onAdd, onCancel}) {
           } 
 
         else if (lowerCommand.includes('cancel')) {
-            // Trigger cancel button click
             cancelButtonRef.current.click();
         } 
 
         else if (lowerCommand.includes('done')) {
-            // Trigger cancel button click
             saveButtonRef.current.click();
         } 
 
@@ -57,17 +60,13 @@ function NewNote({onAdd, onCancel}) {
             return;
         }
 
-        onAdd({
-            title: enteredTitle,
-            description: enteredDescription,
-            dueDate: enteredDueDate
-        });
-
-        console.log(sessionStorage.getItem("user"))
         axios
-      .post("http://localhost:3000/addnote", formData)
-      .catch((error) => {
-        console.log(error);
+        .post("http://localhost:3000/addnote", formData, {
+            headers: {
+              "Authorization": `Bearer ${userId}` // Assuming userId is the user ID
+            }
+          })  
+        .catch((error) => {
         if (error.response) {
           let errorMessage = error.response.data.message;
           errorNotification(errorMessage);
@@ -75,6 +74,11 @@ function NewNote({onAdd, onCancel}) {
           errorNotification(error.message);
         }
       });
+      dispatch(noteActions.setNoteId(undefined))
+    }
+
+    function onCancel() {
+        dispatch(noteActions.setNoteId(undefined))
     }
 
     return(
@@ -94,15 +98,17 @@ function NewNote({onAdd, onCancel}) {
                     <menu className="flex items-center justify-center gap-4 my-4">
                         <li>
                             <button 
+                                type="button"
                                 className="px-6 py-2 rounded-md bg-red-600 text-stone-100 hover:bg-red-700"
                                 ref={cancelButtonRef}
                                 onClick={onCancel}>
                                 Cancel
                             </button>
                         </li>
-                        <SpeechToTextConverter onCommand={handleCommand} className="px-6 py-2 rounded-md bg-blue-600 text-stone-100 hover:bg-blue-700"/>
+                        <SpeechToTextConverter type="button" onCommand={handleCommand} className="px-6 py-2 rounded-md bg-blue-600 text-stone-100 hover:bg-blue-700"/>
                         <li>
-                            <button                           
+                            <button       
+                                type="submit"                    
                                 className="px-6 py-2 rounded-md bg-green-600 text-stone-100 hover:bg-green-700"
                                 ref={saveButtonRef}>
                                 Save

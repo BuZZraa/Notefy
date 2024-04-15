@@ -1,16 +1,17 @@
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch} from "react-redux";
-import { userActions } from "../store/userStore";
+import { noteActions, userActions } from "../store/userStore";
 import axios from "axios";
 import errorNotification, { successNotification } from "../utils/notification";
 
 function Header() {
-  const userId = useSelector(state => state.userId);
+  const userId = useSelector(state => state.user.userId);
   const dispatch = useDispatch();
   function handleLogout() {
     axios.post("http://localhost:3000/logout")
       .then(response => {
         dispatch(userActions.logout());
+        dispatch(noteActions.setNoteId(undefined))
       })
       
       .catch((error) => {
@@ -51,6 +52,7 @@ function Header() {
 
             <div className="lg:flex lg:items-center lg:space-x-4">
               {
+         
                 !userId ? (
                 <>
                   <NavLink
