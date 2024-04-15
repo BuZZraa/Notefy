@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch} from "react-redux";
 import { noteActions, userActions } from "../store/userStore";
 import axios from "axios";
-import errorNotification, { successNotification } from "../utils/notification";
+import errorNotification from "../utils/notification";
 
 function Header() {
   const userId = useSelector(state => state.user.userId);
@@ -20,7 +20,7 @@ function Header() {
   }
   return (
     <header>
-      <div className="bg-indigo-500 border-b border-gray-200">
+      <div className="bg-gradient-to-r from-blue-400 to-purple-500 border-b border-gray-200">
         <div className="px-4 mx-auto sm:px-6 lg:px-8">
           <nav className="relative flex items-center justify-between h-16 lg:h-20">        
             <div className="lg:flex lg:items-center lg:space-x-10">
@@ -33,7 +33,7 @@ function Header() {
               </NavLink>
 
               <NavLink
-                to=""
+                to="aboutus"
                 className="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300"
               >
                 About
