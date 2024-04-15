@@ -4,16 +4,19 @@ import SpeechToTextConverter from "../SpeechToTextConverter.jsx";
 import errorNotification from "../../utils/notification.js";
 import { ToastContainer } from "react-toastify";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { noteActions } from "../../store/userStore.js";
 
 
-function NewNote({onAdd, onCancel}) {
+function NewNote() {
     const title = useRef();
     const description = useRef();
     const dueDate = useRef();
     const cancelButtonRef = useRef();
     const saveButtonRef = useRef();
-    const userId = useSelector(state => state.userId);
+    const userId = useSelector(state => state.user.userId);
+    const dispatch = useDispatch();
+
     function handleCommand(command) {
         const lowerCommand = command.toLowerCase();
         if (lowerCommand.includes('add title')) {
@@ -57,18 +60,12 @@ function NewNote({onAdd, onCancel}) {
             return;
         }
 
-        onAdd({
-            title: enteredTitle,
-            description: enteredDescription,
-            dueDate: enteredDueDate
-        });
-
         axios
         .post("http://localhost:3000/addnote", formData, {
             headers: {
               "Authorization": `Bearer ${userId}` // Assuming userId is the user ID
             }
-          })
+          })  
         .catch((error) => {
         if (error.response) {
           let errorMessage = error.response.data.message;
@@ -77,6 +74,11 @@ function NewNote({onAdd, onCancel}) {
           errorNotification(error.message);
         }
       });
+      dispatch(noteActions.setNoteId(undefined))
+    }
+
+    function onCancel() {
+        dispatch(noteActions.setNoteId(undefined))
     }
 
     return(
@@ -96,6 +98,7 @@ function NewNote({onAdd, onCancel}) {
                     <menu className="flex items-center justify-center gap-4 my-4">
                         <li>
                             <button 
+                                type="button"
                                 className="px-6 py-2 rounded-md bg-red-600 text-stone-100 hover:bg-red-700"
                                 ref={cancelButtonRef}
                                 onClick={onCancel}>

@@ -168,4 +168,24 @@ app.get("/getnotes", async(req, res) => {
   }
 });
 
+app.post("/getCurrentNote", async(req, res) => {
+  const id = req.body.id
+  console.log(id)
+  try {
+    if (!req.headers.authorization) {
+      return res.status(401).json({ message: "Unauthorized. Please login." });
+    }
+
+    const notes = await NotesModel.findOne({ _id: id });
+    return res.json({ message: "Success", notes: notes});
+  }
+
+  catch (error) {
+    console.error("Error adding note:", error);
+    return res
+      .status(500)
+      .json({ message: "An unexpected error occurred. Please try again later." });
+  }
+});
+
 app.listen(3000, () => console.log("Server is running on port 3000!"));
