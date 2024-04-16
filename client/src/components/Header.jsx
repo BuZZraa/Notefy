@@ -10,8 +10,14 @@ function Header() {
   function handleLogout() {
     axios.post("http://localhost:3000/logout")
       .then(response => {
-        dispatch(userActions.logout());
-        dispatch(noteActions.setNoteId(undefined))
+        if(response.data.message === "Success") {
+          dispatch(userActions.logout());
+          dispatch(noteActions.setNoteId(undefined))
+        }
+
+        else {
+          errorNotification("Failed to logout.");
+        }
       })
       
       .catch((error) => {

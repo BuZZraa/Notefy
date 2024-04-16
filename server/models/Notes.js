@@ -29,11 +29,7 @@ const NotesSchema = new mongoose.Schema({
     notes: {
         type: NoteSchema,
         required: true
-    },
-    tasks: [{
-        type: String,
-        required: true
-    }]
+    }
 });
 
 const NotesModel = mongoose.model("notes", NotesSchema);
