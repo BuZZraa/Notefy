@@ -31,7 +31,7 @@ function ProjectSidebar() {
         };
     
         fetchData();
-    });
+    }, [noteId]);
 
     function handleSelectProject(id) {
         dispatch(noteActions.setNoteId(id));
