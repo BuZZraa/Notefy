@@ -65,7 +65,7 @@ function EditNote() {
       .put("http://localhost:3000/updateNote", formData)
       .then((response) => {
         if (response.data.message === "Success") {
-          navigate("/notefy")
+          navigate("/")
       }})
       .catch((error) => {
         if (error.response) {
@@ -78,7 +78,7 @@ function EditNote() {
   }
 
   function cancelAction() {
-    navigate("/notefy");
+    navigate("/");
   }
 
   function handleCommand(command) {
