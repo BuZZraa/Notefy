@@ -215,7 +215,7 @@ app.post("/resetPassword", async(req, res) => {
 
 
 
-app.post("/addnote", checkAuthorization, async (req, res) => {
+app.post("/addnote",  async (req, res) => {
   try {
 
     const id = req.headers.authorization.slice(7)
@@ -236,7 +236,7 @@ app.post("/addnote", checkAuthorization, async (req, res) => {
 
 
 
-app.get("/getnotes", checkAuthorization, async(req, res) => {
+app.get("/getnotes", async(req, res) => {
   const id = req.headers.authorization.slice(7)
 
   try {
@@ -255,7 +255,7 @@ app.get("/getnotes", checkAuthorization, async(req, res) => {
 
 
 
-app.post("/getCurrentNote", checkAuthorization, async(req, res) => {
+app.post("/getCurrentNote",  async(req, res) => {
   const noteId = req.body.id
   console.log(req.session.userId)
   try {
@@ -272,7 +272,7 @@ app.post("/getCurrentNote", checkAuthorization, async(req, res) => {
   }
 });
 
-app.post("/deleteNote", checkAuthorization, async(req, res) => {
+app.post("/deleteNote", async(req, res) => {
   const noteId = req.body.id
   try {
     const notes = await NotesModel.deleteOne({ _id: noteId });
@@ -287,19 +287,21 @@ app.post("/deleteNote", checkAuthorization, async(req, res) => {
   }
 })
 
-app.put("/updateNote", checkAuthorization, async(req, res) => {
+app.put("/updateNote",  async(req, res) => {
   const {title, description, addedDate, dueDate, noteId} = req.body
-  console.log(req.headers.authorization)
-  console.log(req.body)
+ 
   try {
 
     const updateNote = await NotesModel.updateOne(
       {_id: noteId},
-      {
-        
-      }
+      {notes:{
+        addedDate,
+        title,
+        description,
+        dueDate
+      }}
     )
-    return res.json({message: "Successfully updated note.", updateNote})
+    return res.json({ message: "Success" });
   }
 
   catch(error) {
