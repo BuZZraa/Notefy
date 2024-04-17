@@ -44,6 +44,13 @@ function Header() {
               >
                 About
               </NavLink>
+
+              { userId && <NavLink
+                to="searchNote"
+                className="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300"
+              >
+                Search
+              </NavLink>}
             </div>
 
             <div className="lg:absolute lg:-translate-x-1/2 lg:inset-y-5 lg:left-1/2">
@@ -62,7 +69,7 @@ function Header() {
                 !userId ? (
                 <>
                   <NavLink
-                    to="/"
+                    to="register"
                     className="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300">        
                     Register
                   </NavLink>

@@ -22,19 +22,19 @@ function EnterCode() {
   }
 
   return (
-    <div class="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
+    <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
         <ToastContainer newestOnTop closeOnClick position="bottom-right"/>
-        <h1 class="text-4xl font-medium pb-3">Verify code</h1>
-        <p class="text-slate-500">Enter the code received in your mail.</p>
+        <h1 className="text-4xl font-medium pb-3">Verify code</h1>
+        <p className="text-slate-500">Enter the code received in your mail.</p>
 
-        <form class="my-10" onSubmit={verifyCode}>
-            <div class="flex flex-col space-y-5">
+        <form className="my-10" onSubmit={verifyCode}>
+            <div className="flex flex-col space-y-5">
                 <label for="email">
-                    <p class="font-medium text-slate-700 pb-2">Code</p>
-                    <input name="code" type="number" class="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow" placeholder="123456" />
+                    <p className="font-medium text-slate-700 pb-2">Code</p>
+                    <input name="code" type="number" className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow" placeholder="123456" />
                 </label>
                
-                <button type="submit" class="w-full py-3 font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center">
+                <button type="submit" className="w-full py-3 font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center">
                     Verify
                 </button>           
             </div>

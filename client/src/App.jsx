@@ -11,6 +11,7 @@ import SecureForgotPassword from "./utils/SecureForgotPassword.jsx";
 import AboutUs from "./components/AboutUs.jsx";
 import Home from "./components/Home.jsx";
 import EditNote from "./components/Note/EditNote.jsx";
+import SearchNote from "./components/Note/SearchNote.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -19,10 +20,11 @@ function App() {
       element: <RootLayout />,
       errorElement: <PageNotFound />,
       children: [
-        { index: true, element: <Register /> },
+        { index: true, element: <SecureRoute element={<Home />} /> },
+        { path:"register", element: <Register /> },
         { path: "login", element: <Login /> },
-        { path: "notefy", element: <SecureRoute element={<Home />} /> },
         { path: "editNote", element: <SecureRoute element={<EditNote />} /> },
+        { path: "searchNote", element: <SecureRoute element={ <SearchNote />} />},
         { path: "aboutus", element: <AboutUs />},
         { path: "forgotPassword", element: <ForgotPassword /> },
         { path: "enterCode", element: <SecureForgotPassword element={<EnterCode />} /> },

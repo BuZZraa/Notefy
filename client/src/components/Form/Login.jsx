@@ -21,7 +21,7 @@ function Login() {
       .post("http://localhost:3000/login", formData)
       .then((response) => {
         if (response.data.message === "Success") {
-          navigate("/notefy")
+          navigate("/")
           dispatch(userActions.setUser(response.data.user));
         }
       })
