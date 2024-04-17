@@ -53,11 +53,7 @@ function NewNote() {
     }
 
     axios
-      .post("http://localhost:3000/addnote", formData, {
-        headers: {
-          Authorization: `Bearer ${userId}`, // Assuming userId is the user ID
-        },
-      })
+      .post("http://localhost:3000/addnote", formData)
       .catch((error) => {
         if (error.response) {
           let errorMessage = error.response.data.message;

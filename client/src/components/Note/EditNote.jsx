@@ -7,6 +7,7 @@ import errorNotification from "../../utils/notification";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
 function EditNote() {
   const userId = useSelector((state) => state.user.userId);
   const noteId = useSelector((state) => state.note.noteId);
@@ -27,15 +28,7 @@ function EditNote() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post(
-          "http://localhost:3000/getCurrentNote",
-          { id: noteId },
-          {
-            headers: {
-              Authorization: `Bearer ${userId}`,
-            },
-          }
-        );
+        const response = await axios.post("http://localhost:3000/getCurrentNote", {id: noteId});
 
         if (response && response.data) {
           setCurrentNote(response.data.notes);
@@ -54,6 +47,7 @@ function EditNote() {
     event.preventDefault();
     const fd = new FormData(event.target);
     const formData = Object.fromEntries(fd.entries());
+    formData.noteId = noteId;
     const enteredTitle = title.current.value;
     const enteredDescription = description.current.value;
     const enteredDueDate = dueDate.current.value;
@@ -66,13 +60,13 @@ function EditNote() {
       errorNotification("Enter value for all input fields.");
       return;
     }
-
+    
     axios
-      .post("http://localhost:3000/addnote", formData, {
-        headers: {
-          Authorization: `Bearer ${userId}`, // Assuming userId is the user ID
-        },
-      })
+      .put("http://localhost:3000/updateNote", formData)
+      .then((response) => {
+        if (response.data.message === "Success") {
+          navigate("/notefy")
+      }})
       .catch((error) => {
         if (error.response) {
           let errorMessage = error.response.data.message;
