@@ -44,7 +44,7 @@ function Footer() {
 
           <a
             href="#"
-            className="mx-2 text-stone-100 transition-colors duration-30 hover:text-indigo-300"
+            className="mx-2 text-stone-100 transition-colors duration-30 hover:text-indigo-300 "
             aria-label="Github"
           >
             <svg

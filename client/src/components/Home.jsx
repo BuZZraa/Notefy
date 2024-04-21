@@ -1,5 +1,5 @@
 import NotesSidebar from "./Note/NoteSidebar";
-import SelectedNote from "./Note/SelectedNote.jsx"
+import SelectedNote from "./Note/SelectedNote.jsx";
 import NewNote from "./Note/NewNote.jsx";
 import NoteNotSelected from "./Note/NoteNotSelected.jsx";
 import { ToastContainer } from "react-toastify";
@@ -8,14 +8,12 @@ import { useLoaderData } from "react-router-dom";
 function Home() {
   const noteId = useSelector((state) => state.note.noteId);
   const posts = useLoaderData();
-  console.log(posts)
+  console.log(posts);
   let content = <SelectedNote />;
 
   if (noteId === null) {
     content = <NewNote />;
-  } 
-  
-  else if (noteId === undefined) {
+  } else if (noteId === undefined) {
     content = <NoteNotSelected />;
   }
 

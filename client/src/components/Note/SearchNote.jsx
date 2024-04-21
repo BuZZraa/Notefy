@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 function SearchNote() {
   const userId = useSelector((state) => state.user.userId);
   const noteId = useSelector((state) => state.note.noteId);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchResults, setSearchResults] = useState([]);
 
@@ -113,7 +113,9 @@ function SearchNote() {
               className="border border-gray-400 px-2 py-1 rounded-md"
               name="sortBy"
             >
-              <option value="select" disabled>Select</option>
+              <option value="select" disabled>
+                Select
+              </option>
               <option value="addedDate">Added Date</option>
               <option value="dueDate">Due Date</option>
             </select>
@@ -128,7 +130,9 @@ function SearchNote() {
             <Button type="submit">Search</Button>
           </div>
         </form>
-        <div className="search-results bg-indigo-300 p-4 rounded-md border border-gray-300">{content}</div>
+        <div className="search-results bg-indigo-300 p-4 rounded-md border border-gray-300">
+          {content}
+        </div>
       </main>
     </div>
   );

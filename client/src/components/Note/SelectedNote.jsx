@@ -9,38 +9,43 @@ import { useNavigate } from "react-router-dom";
 function SelectedProject() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const noteId = useSelector(state => state.note.noteId);
-  const userId = useSelector(state => state.user.userId);
-  const [currentNote, setCurrentNote] = useState({notes: {
-    title: "loading...",
-    description: "loading...",
-    dueDate: "2024-01-01"
-  }})
+  const noteId = useSelector((state) => state.note.noteId);
+  const userId = useSelector((state) => state.user.userId);
+  const [currentNote, setCurrentNote] = useState({
+    notes: {
+      title: "loading...",
+      description: "loading...",
+      dueDate: "2024-01-01",
+    },
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if(noteId === "") {
-          errorNotification("Note id not provided in the request.")  
+        if (noteId === "") {
+          errorNotification("Note id not provided in the request.");
           return;
         }
 
-          const response = await axios.post("http://localhost:3000/getCurrentNote", { id: noteId }, {
-          headers: {
-              "Authorization": `Bearer ${userId}` 
+        const response = await axios.post(
+          "http://localhost:3000/getCurrentNote",
+          { id: noteId },
+          {
+            headers: {
+              Authorization: `Bearer ${userId}`,
+            },
           }
-      });
+        );
 
-          if(response && response.data) {
-              setCurrentNote(response.data.notes);
-          }
-          
+        if (response && response.data) {
+          setCurrentNote(response.data.notes);
+        }
       } catch (error) {
-          errorNotification(error);
+        errorNotification(error);
       }
-  };
+    };
 
-  fetchData();
+    fetchData();
   }, [noteId]);
 
   function editNote() {
@@ -49,21 +54,24 @@ function SelectedProject() {
 
   function deleteNote() {
     try {
-        axios.post("http://localhost:3000/deleteNote", { id: noteId }, {
+      axios.post(
+        "http://localhost:3000/deleteNote",
+        { id: noteId },
+        {
           headers: {
-            "Authorization": `Bearer ${userId}` 
-          }
-        });
-        dispatch(noteActions.setNoteId(undefined))
-    }
- 
-    catch(error) {
+            Authorization: `Bearer ${userId}`,
+          },
+        }
+      );
+      dispatch(noteActions.setNoteId(undefined));
+    } catch (error) {
       errorNotification(error);
     }
-    
   }
 
-  const formattedDate = new Date(currentNote?.notes?.dueDate).toLocaleDateString("en-US", {
+  const formattedDate = new Date(
+    currentNote?.notes?.dueDate
+  ).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -79,9 +87,7 @@ function SelectedProject() {
             </h1>
           </div>
           <p className="mb-4 text-stone-500">{formattedDate}</p>
-          <p className="whitespace-pre-wrap">
-            {currentNote.notes.description}
-          </p>
+          <p className="whitespace-pre-wrap">{currentNote.notes.description}</p>
         </div>
       )}
       <div className="mt-4">
@@ -100,8 +106,6 @@ function SelectedProject() {
       </div>
     </div>
   );
-  
-  
 }
 
 export default SelectedProject;

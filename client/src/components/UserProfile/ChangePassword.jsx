@@ -1,38 +1,51 @@
+import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
 import errorNotification, {
   successNotification,
 } from "../../utils/notification";
+import { useSelector } from "react-redux";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { forgotPasswordActions } from "../../store/userStore";
 
-function ResetPassword() {
-  const dispatch = useDispatch();
-  const email = useSelector((state) => state.forgotPassword.email);
+function ChangePassword() {
   const navigate = useNavigate();
+  const userId = useSelector((state) => state.user.userId);
+  function handleCancel() {
+    navigate("/userProfile");
+  }
 
   function changePassword(event) {
     event.preventDefault();
-    const password = event.target.password.value;
-    const reenterPassword = event.target.reenterPassword.value;
-    if (password === "" || reenterPassword === "") {
-      errorNotification("Enter new password in both fields.");
+    const currentPassword = event.target.currentPassword.value;
+    const newPassword = event.target.newPassword.value;
+    const reenterNewPassword = event.target.reenterPassword.value;
+    if (
+      currentPassword === "" ||
+      newPassword === "" ||
+      reenterNewPassword === ""
+    ) {
+      errorNotification("Enter password in all input fields.");
     }
 
-    if (password === reenterPassword) {
+    if (newPassword === reenterNewPassword) {
       axios
-        .post("http://localhost:3000/resetPassword", {
-          email: email,
-          password: password,
-          reenterPassword: reenterPassword,
-        })
+        .put(
+          "http://localhost:3000/changePassword",
+          {
+            currentPassword,
+            newPassword,
+            reenterNewPassword,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userId}`,
+            },
+          }
+        )
         .then((response) => {
           if (response.data.message === "Success") {
-            dispatch(forgotPasswordActions.clearVerificationInfo());
-            successNotification("Password has been reset successfully.");
+            successNotification("Password has been changed successfully.");
             setTimeout(() => {
-              navigate("/login");
+              navigate("/userProfile");
             }, 1000);
           }
         })
@@ -46,24 +59,33 @@ function ResetPassword() {
           }
         });
     } else {
-      errorNotification("Passwords don't match.");
+      errorNotification("New password don't match.");
     }
   }
 
   return (
     <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
       <ToastContainer newestOnTop closeOnClick position="bottom-right" />
-      <h1 className="text-4xl font-medium pb-3">Reset password</h1>
+      <h1 className="text-4xl font-medium pb-3">Change password</h1>
 
       <form className="mt-10" onSubmit={changePassword}>
         <div className="flex flex-col space-y-5">
           <label htmlFor="password">
-            <p className="font-medium text-slate-700 pb-2">Password</p>
+            <p className="font-medium text-slate-700 pb-2">Current Password</p>
             <input
               type="password"
-              name="password"
+              name="currentPassword"
               className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
-              placeholder="Enter password"
+              placeholder="Enter current password"
+            />
+          </label>
+          <label htmlFor="password">
+            <p className="font-medium text-slate-700 pb-2">New Password</p>
+            <input
+              type="password"
+              name="newPassword"
+              className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
+              placeholder="Enter new password"
             />
           </label>
 
@@ -73,13 +95,13 @@ function ResetPassword() {
               type="password"
               name="reenterPassword"
               className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
-              placeholder="Re-enter password"
+              placeholder="Re-enter new password"
             />
           </label>
 
           <button
             type="submit"
-            className="w-full py-3 font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center"
+            className="w-full py-3 font-medium text-white bg-indigo-500 hover:bg-indigo-700 rounded-lg border-indigo-700 hover:shadow inline-flex space-x-2 items-center justify-center transition duration-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -95,37 +117,19 @@ function ResetPassword() {
                 d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
               />
             </svg>
-            <span>Reset password</span>
+            <span>Change password</span>
           </button>
-
-          <p className="text-center">
-            <Link
-              to="/login"
-              className="text-indigo-600 font-medium inline-flex space-x-1 items-center"
-            >
-              <span>Login</span>
-              <span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  />
-                </svg>
-              </span>
-            </Link>
-          </p>
+          <button
+            type="button"
+            className="py-2 px-4 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition duration-300"
+            onClick={handleCancel}
+          >
+            Cancel
+          </button>
         </div>
       </form>
     </div>
   );
 }
 
-export default ResetPassword;
+export default ChangePassword;
