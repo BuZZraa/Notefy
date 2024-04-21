@@ -20,7 +20,7 @@ function EditNote() {
   const cancelButtonRef = useRef();
   const saveButtonRef = useRef();
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [currentNote, setCurrentNote] = useState({
     notes: {
       title: "",
@@ -32,11 +32,15 @@ function EditNote() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post("http://localhost:3000/getCurrentNote", {id: noteId}, {
-          headers: {
-            "Authorization": `Bearer ${userId}` 
+        const response = await axios.post(
+          "http://localhost:3000/getCurrentNote",
+          { id: noteId },
+          {
+            headers: {
+              Authorization: `Bearer ${userId}`,
+            },
           }
-        });
+        );
 
         if (response && response.data) {
           setCurrentNote(response.data.notes);
@@ -48,7 +52,6 @@ function EditNote() {
 
     fetchData();
   }, []);
-
 
   function editNote(event) {
     event.preventDefault();
@@ -67,24 +70,23 @@ function EditNote() {
       errorNotification("Enter value for all input fields.");
       return;
     }
-    
+
     axios
       .put("http://localhost:3000/updateNote", formData, {
-          headers: {
-            "Authorization": `Bearer ${userId}` 
-          }
-        })
+        headers: {
+          Authorization: `Bearer ${userId}`,
+        },
+      })
       .then((response) => {
         if (response.data.message === "Success") {
-          dispatch(noteActions.setNoteId(undefined))
-          if(page==="search") {
-            navigate("/searchNote")
+          dispatch(noteActions.setNoteId(undefined));
+          if (page === "search") {
+            navigate("/searchNote");
+          } else {
+            navigate("/");
           }
-
-          else {
-            navigate("/")
-          }     
-      }})
+        }
+      })
       .catch((error) => {
         if (error.response) {
           let errorMessage = error.response.data.message;
@@ -96,11 +98,11 @@ function EditNote() {
   }
 
   function cancelAction() {
-    dispatch(noteActions.setNoteId(undefined))
+    dispatch(noteActions.setNoteId(undefined));
     navigate("/");
 
-    if(page==="search") {
-      navigate("/searchNote")
+    if (page === "search") {
+      navigate("/searchNote");
     }
   }
 

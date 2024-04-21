@@ -21,8 +21,8 @@ function Register() {
         .post("http://localhost:3000/register", formData)
         .then((response) => {
           console.log(response);
-          if(response.status === 409) {
-            errorNotification(response.data.messsage)
+          if (response.status === 409) {
+            errorNotification(response.data.messsage);
           }
           navigate("/login");
         })
@@ -72,17 +72,11 @@ function Register() {
             name="email"
             placeholder="john.doe@example.com"
           />
-          <FormInput
-            label="Password"
-            type="password"
-            name="password"
-           
-          />
+          <FormInput label="Password" type="password" name="password" />
           <FormInput
             label="Re-enter Password"
             type="password"
             name="reenterPassword"
-            
           />
           <button
             type="submit"

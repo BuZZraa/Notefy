@@ -29,13 +29,13 @@ function NewNote() {
     } else if (lowerCommand.includes("remove description")) {
       description.current.value = "";
     } else if (lowerCommand.includes("add date")) {
-     const dateToAdd = lowerCommand.replace("add date", "").trim();
-    const formattedDate = formatDate(dateToAdd);
-    if (formattedDate) {
-      dueDate.current.value = formattedDate;
-    } else {
-      console.error("Invalid date format provided.");
-    }
+      const dateToAdd = lowerCommand.replace("add date", "").trim();
+      const formattedDate = formatDate(dateToAdd);
+      if (formattedDate) {
+        dueDate.current.value = formattedDate;
+      } else {
+        console.error("Invalid date format provided.");
+      }
     } else if (lowerCommand.includes("cancel")) {
       cancelButtonRef.current.click();
     } else if (lowerCommand.includes("save")) {
@@ -75,19 +75,20 @@ function NewNote() {
       return;
     }
 
-    axios.post("http://localhost:3000/addnote", formData, 
-    {
-      headers: {
-          "Authorization": `Bearer ${userId}` 
-      }
-  }).catch((error) => {
-      if (error.response) {
-        let errorMessage = error.response.data.message;
-        errorNotification(errorMessage);
-      } else {
-        errorNotification(error.message);
-      }
-    });
+    axios
+      .post("http://localhost:3000/addnote", formData, {
+        headers: {
+          Authorization: `Bearer ${userId}`,
+        },
+      })
+      .catch((error) => {
+        if (error.response) {
+          let errorMessage = error.response.data.message;
+          errorNotification(errorMessage);
+        } else {
+          errorNotification(error.message);
+        }
+      });
     dispatch(noteActions.setNoteId(undefined));
   }
 

@@ -233,6 +233,93 @@ app.post("/resetPassword", async(req, res) => {
 
 
 
+app.put("/updateProfile",  async(req, res) => {
+  
+  try {
+    const {firstName, lastName, email} = req.body
+    const userId = req.headers.authorization.slice(7)
+
+    if(userId === "") {
+      return res.status(401).json({message: "User id required to update the notes."});
+    }
+
+    if(firstName === "" || lastName === "" || email === "") {
+      return res.status(400).json({message: "Enter value for all input fields."});
+    }
+
+    await UsersModel.updateOne(
+      {_id: userId},
+      {
+        firstName,
+        lastName,
+        email
+      }
+    )
+    return res.status(200).json({ message: "Success" });
+  }
+
+  catch(error) {
+    console.error("Error updating note:", error);
+    return res
+      .status(500)
+      .json({ message: "An unexpected error occurred. Please try again later." });
+  }
+})
+
+
+
+app.put("/changePassword",  async(req, res) => {
+  
+  try {
+    const {currentPassword, newPassword, reenterNewPassword } = req.body
+    const userId = req.headers.authorization.slice(7)
+
+
+    if(userId === "") {
+      return res.status(401).json({message: "User id required to change the password."});
+    }
+
+    if(currentPassword === "" || newPassword === "" || reenterNewPassword=== "") {
+      return res.status(400).json({message: "Enter value for all input fields."});
+    }
+
+    if(newPassword !== reenterNewPassword) {
+      return res.status(400).json({message: "New password don't match."});
+    }
+
+    if (!(newPassword.length >= 8 && newPassword.length <= 12)) {
+      return res.status(400).json({message: "Password must be between 8 and 12 characters."});
+    }
+
+    const existingUser = await UsersModel.findOne({_id: userId});
+    if(!existingUser) {
+      return res.status(401).json({ message: "User not found." });
+    }
+
+    const validCurrentPassword = await bcrypt.compare(currentPassword, existingUser.password);
+    if(!validCurrentPassword) {
+      return res.status(401).json({ message: "Enter valid current password." });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await UsersModel.updateOne({_id: userId}, {
+      password: hashedNewPassword
+    });
+
+    return res.status(200).json({ message: "Success" });
+  }
+
+  catch(error) {
+    console.error("Error changing password:", error);
+    return res
+      .status(500)
+      .json({ message: "An unexpected error occurred. Please try again later." });
+  }
+})
+
+
+
+
 app.post("/addnote",  async (req, res) => {
   const userId = req.headers.authorization.slice(7)
   try {
