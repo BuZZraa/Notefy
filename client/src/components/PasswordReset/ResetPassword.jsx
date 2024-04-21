@@ -14,6 +14,10 @@ function ResetPassword() {
         event.preventDefault() 
         const password = event.target.password.value;
         const reenterPassword = event.target.reenterPassword.value
+        if(password === "" || reenterPassword === "") {
+          errorNotification("Enter new password in both fields.")
+        }
+
         if(password === reenterPassword) {
             axios
             .post("http://localhost:3000/resetPassword", {

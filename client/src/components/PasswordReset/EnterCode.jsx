@@ -9,6 +9,7 @@ function EnterCode() {
   function verifyCode(event) {
     event.preventDefault()
     const code = event.target.code.value;
+
     if(code === validCode) {
         successNotification("Successfully verified.")
         setTimeout(() => {

@@ -16,7 +16,7 @@ function NewNote() {
   const userId = useSelector((state) => state.user.userId);
   const dispatch = useDispatch();
 
-  function handleCommand(command) {
+  function handleCommand(command, event) {
     const lowerCommand = command.toLowerCase();
     if (lowerCommand.includes("add title")) {
       const titleToAdd = command.replace("add title", "").trim();
@@ -28,11 +28,34 @@ function NewNote() {
       description.current.value = descriptionToAdd;
     } else if (lowerCommand.includes("remove description")) {
       description.current.value = "";
+    } else if (lowerCommand.includes("add date")) {
+     const dateToAdd = lowerCommand.replace("add date", "").trim();
+    const formattedDate = formatDate(dateToAdd);
+    if (formattedDate) {
+      dueDate.current.value = formattedDate;
+    } else {
+      console.error("Invalid date format provided.");
+    }
     } else if (lowerCommand.includes("cancel")) {
       cancelButtonRef.current.click();
-    } else if (lowerCommand.includes("done")) {
+    } else if (lowerCommand.includes("save")) {
+      event.preventDefault();
       saveButtonRef.current.click();
     }
+  }
+
+  function formatDate(dateString) {
+    // Split the date string into parts
+    const parts = dateString.split(" ");
+    if (parts.length === 2) {
+      // Extract the year, month, and day
+      const year = parts[0];
+      const month = parts[1].substring(0, 2);
+      const day = parts[1].substring(2);
+      // Construct and return the formatted date
+      return `${year}-${month}-${day}`;
+    }
+    return null;
   }
 
   function handleSave(event) {
@@ -52,16 +75,19 @@ function NewNote() {
       return;
     }
 
-    axios
-      .post("http://localhost:3000/addnote", formData)
-      .catch((error) => {
-        if (error.response) {
-          let errorMessage = error.response.data.message;
-          errorNotification(errorMessage);
-        } else {
-          errorNotification(error.message);
-        }
-      });
+    axios.post("http://localhost:3000/addnote", formData, 
+    {
+      headers: {
+          "Authorization": `Bearer ${userId}` 
+      }
+  }).catch((error) => {
+      if (error.response) {
+        let errorMessage = error.response.data.message;
+        errorNotification(errorMessage);
+      } else {
+        errorNotification(error.message);
+      }
+    });
     dispatch(noteActions.setNoteId(undefined));
   }
 
@@ -73,7 +99,7 @@ function NewNote() {
     <>
       <ToastContainer newestOnTop position="bottom-right" />
       <form onSubmit={handleSave}>
-        <div className="w-[35rem] mt-16 border-solid border-2 border-stone-400 h-fit p-8 rounded-md">
+        <div className="w-[35rem] mt-16 bg-yellow-100 border-2 border-yellow-800 h-fit p-8 rounded-md">
           <h1 className="text-4xl font-bold text-center">Add Note</h1>
           <div>
             <NoteInput

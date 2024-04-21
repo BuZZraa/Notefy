@@ -47,7 +47,7 @@ function Login() {
           className="object-cover w-full h-full"
         />
       </div>
-      <div className="bg-white p-8 rounded-md shadow-lg w-1/4">
+      <div className="bg-indigo-100 p-8 rounded-md shadow-lg w-1/4">
         <h1 className="text-4xl font-bold mb-4">Login</h1>
         <form onSubmit={handleSubmit}>
           <FormInput

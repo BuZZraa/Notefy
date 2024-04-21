@@ -17,18 +17,10 @@ app.use(session({
   secret: process.env.KEY, // Secret used to sign the session ID cookie
   resave: false, // Save session data on every request, even if it hasn't changed
   saveUninitialized: false, // Save new sessions that haven't been modified
-  cookie: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // Set to true in production
-    sameSite: 'strict', // Adjust as needed
-  }
 }));
 
 app.use(express.json());
-app.use(cors(
-  { 
-    credentials: true
-}));
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect(process.env.DATABASE).then(console.log("Connected to MongoDB Database!"));
@@ -77,6 +69,7 @@ app.post("/register", async (req, res) => {
   } 
   
   catch (error) {
+    console.error(error)
     res
       .status(500)
       .json({
@@ -109,9 +102,6 @@ app.post("/login", async (req, res) => {
     }
 
     req.session.userId = user._id;
-    console.log(res.getHeaders());
-    console.log(req.session)
-    console.log(res.getHeaders())
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res
@@ -119,7 +109,7 @@ app.post("/login", async (req, res) => {
         .json({ message: "The password you entered is incorrect." });
     }
 
-    return res.json({ message: "Success", user: user._id });
+    return res.status(200).json({ message: "Success", user: user._id });
   } catch (error) {
     console.error("Login error:", error);
     return res
@@ -129,6 +119,32 @@ app.post("/login", async (req, res) => {
       });
   }
 });
+
+
+
+app.get("/getUser", async (req, res) => {
+  try {
+    const userId = req.headers.authorization.slice(7)
+    if(userId === "") {
+      return res.status(401).json({message: "User id required to get the notes."});
+    }
+
+    const user = await UsersModel.findOne({ _id: userId });
+    return res.status(200).json({ message: "Success", user});
+
+  }
+
+  catch(error) {
+    console.error("Login error:", error);
+    return res
+      .status(500)
+      .json({
+        message: "An unexpected error occurred. Please try again later.",
+      });
+  }
+
+})
+
 
 
 
@@ -169,10 +185,11 @@ app.post("/forgotPassword", async(req, res) => {
     ).toString()
     
     sendMail(verificationCode, email);
-    return res.json({ message: "Success", code: verificationCode});
+    return res.status(200).json({ message: "Success", code: verificationCode});
   }
 
   catch(error) {
+    console.error("Error forget password: ", error)
     return res
       .status(500)
       .json({
@@ -200,11 +217,12 @@ app.post("/resetPassword", async(req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const updateUser = await UsersModel.updateOne({email: email}, {password: hashedPassword})
+    await UsersModel.updateOne({email: email}, {password: hashedPassword})
     return res.status(200).json({message: "Success"});
   }
 
   catch(error) {
+    console.error("Error resetting passowrd: ", error)
     res
     .status(500)
     .json({
@@ -216,11 +234,14 @@ app.post("/resetPassword", async(req, res) => {
 
 
 app.post("/addnote",  async (req, res) => {
+  const userId = req.headers.authorization.slice(7)
   try {
+    if(userId === "") {
+      return res.status(401).json({message: "User id required to get the notes."});
+    }
 
-    const id = req.headers.authorization.slice(7)
     const newNote = await NotesModel.create({
-      userId: id, // Assign the userId from session
+      userId: userId, // Assign the userId from session
       notes: req.body, 
     });
 
@@ -237,62 +258,100 @@ app.post("/addnote",  async (req, res) => {
 
 
 app.get("/getnotes", async(req, res) => {
-  const id = req.headers.authorization.slice(7)
-
   try {
-    const notes = await NotesModel.find({ userId: id });
-    return res.json({ message: "Success", notes: notes});
+    const userId = req.headers.authorization.slice(7)
+    if(userId === "") {
+      return res.status(401).json({message: "User id required to get the notes."});
+    }
+
+    const notes = await NotesModel.find({ userId: userId });
+    return res.status(200).json({ message: "Success", notes: notes});
   }
 
   catch (error) {
-    console.error("Error adding note:", error);
+    console.error("Error getting all notes:", error);
     return res
       .status(500)
       .json({ message: "An unexpected error occurred. Please try again later." });
   }
 });
-
 
 
 
 app.post("/getCurrentNote",  async(req, res) => {
-  const noteId = req.body.id
-  console.log(req.session.userId)
+  
   try {
-    
+    const noteId = req.body.id
+    const userId = req.headers.authorization.slice(7)
+
+    if(noteId === "") {
+      return res.status(401).json({message: "Note id required to get the note."});
+    }
+
+    if(userId === "") {
+      return res.status(401).json({message: "User id required to get the notes."});
+    }
+
     const notes = await NotesModel.findOne({ _id: noteId });
-    return res.json({ message: "Success", notes: notes});
+    return res.status(200).json({ message: "Success", notes: notes});
   }
 
   catch (error) {
-    console.error("Error getting note:", error);
+    console.error("Error getting current note:", error);
     return res
       .status(500)
       .json({ message: "An unexpected error occurred. Please try again later." });
   }
 });
 
+
+
 app.post("/deleteNote", async(req, res) => {
   const noteId = req.body.id
+  const userId = req.headers.authorization.slice(7)
+
   try {
-    const notes = await NotesModel.deleteOne({ _id: noteId });
-    return res.json({ message: "Successfully deleted note."});
+    if(noteId === "") {
+      return res.status(401).json({message: "Note id required to delete the note."});
+    }
+
+    if(userId === "") {
+      return res.status(401).json({message: "User id required to delete the notes."});
+    }
+
+    await NotesModel.deleteOne({ _id: noteId });
+    return res.status(200).json({ message: "Successfully deleted note."});
   }
 
   catch(error) {
-    console.error("Error getting note:", error);
+    console.error("Error deleting note:", error);
     return res
       .status(500)
       .json({ message: "An unexpected error occurred. Please try again later." });
   }
 })
 
+
+
+
 app.put("/updateNote",  async(req, res) => {
   const {title, description, addedDate, dueDate, noteId} = req.body
- 
-  try {
+  const userId = req.headers.authorization.slice(7)
 
-    const updateNote = await NotesModel.updateOne(
+  try {
+    if(noteId === "") {
+      return res.status(401).json({message: "Note id required to update the note."});
+    }
+
+    if(userId === "") {
+      return res.status(401).json({message: "User id required to update the notes."});
+    }
+
+    if(title==="" || description==="" || addedDate==="" || dueDate==="" || noteId==="") {
+      return res.status(400).json({message: "Enter value for all input fields."});
+    }
+
+    await NotesModel.updateOne(
       {_id: noteId},
       {notes:{
         addedDate,
@@ -301,7 +360,7 @@ app.put("/updateNote",  async(req, res) => {
         dueDate
       }}
     )
-    return res.json({ message: "Success" });
+    return res.status(200).json({ message: "Success" });
   }
 
   catch(error) {
@@ -311,5 +370,50 @@ app.put("/updateNote",  async(req, res) => {
       .json({ message: "An unexpected error occurred. Please try again later." });
   }
 })
+
+app.post("/searchNote", async (req, res) => {
+  const title = req.body.title; 
+  const sortBy = req.body.sortBy;
+  const userId = req.headers.authorization.slice(7);
+
+  try {
+  
+    if(userId==="") {
+      return res.status(401).json({message: "User id required to get the notes."});
+    }
+
+    let query = { userId: userId };
+    let sortField;
+
+    if (title) {
+      query["notes.title"] = { $regex: title, $options: "i" };
+    }
+
+    if (sortBy === "addedDate" || sortBy === "dueDate") {
+      sortField = `notes.${sortBy}`;
+    }
+
+    let notes;
+
+    if (sortField) {
+      if (title) {
+        notes = await NotesModel.find(query).sort({ [sortField]: 1 });
+      } else {
+        notes = await NotesModel.find({ userId: userId }).sort({ [sortField]: 1 });
+      }
+    } else {
+      notes = await NotesModel.find(query);
+    }
+
+    return res.status(200).json({ message: "Success", notes: notes });
+  } catch (error) {
+    console.error("Error searching note:", error);
+    return res
+      .status(500)
+      .json({ message: "An unexpected error occurred. Please try again later." });
+  }
+});
+
+
 
 app.listen(3000, () => console.log("Server is running on port 3000!"));
