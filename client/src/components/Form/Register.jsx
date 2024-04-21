@@ -51,7 +51,7 @@ function Register() {
           className="object-cover w-full h-full"
         />
       </div>
-      <div className="bg-white p-8 rounded-md shadow-lg w-1/4">
+      <div className="bg-indigo-100 p-8 rounded-md shadow-xl w-1/4">
         <h1 className="text-3xl font-bold mb-4">Register</h1>
         <form onSubmit={handleSubmit}>
           <FormInput

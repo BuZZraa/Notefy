@@ -14,6 +14,7 @@ import EditNote from "./components/Note/EditNote.jsx";
 import SearchNote from "./components/Note/SearchNote.jsx";
 
 function App() {
+
   const router = createBrowserRouter([
     {
       path: "/",

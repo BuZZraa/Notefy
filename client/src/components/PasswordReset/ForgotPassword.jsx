@@ -15,7 +15,7 @@ function ForgotPassword() {
     const email = event.target.email.value;
 
     if(email === "") {
-        errorNotification("Please enter a email !")
+        errorNotification("Enter a email to reset password.")
     }
 
     axios

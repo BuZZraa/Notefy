@@ -1,14 +1,17 @@
 import { ToastContainer } from "react-toastify";
 import NoteInput from "./NoteInput";
 import SpeechToTextConverter from "../../utils/SpeechToTextConverter";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import errorNotification from "../../utils/notification";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { noteActions } from "../../store/userStore";
+import { useSearchParams } from "react-router-dom";
 
 function EditNote() {
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get("page");
   const userId = useSelector((state) => state.user.userId);
   const noteId = useSelector((state) => state.note.noteId);
   const title = useRef();
@@ -17,6 +20,7 @@ function EditNote() {
   const cancelButtonRef = useRef();
   const saveButtonRef = useRef();
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [currentNote, setCurrentNote] = useState({
     notes: {
       title: "",
@@ -28,7 +32,11 @@ function EditNote() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post("http://localhost:3000/getCurrentNote", {id: noteId});
+        const response = await axios.post("http://localhost:3000/getCurrentNote", {id: noteId}, {
+          headers: {
+            "Authorization": `Bearer ${userId}` 
+          }
+        });
 
         if (response && response.data) {
           setCurrentNote(response.data.notes);
@@ -41,7 +49,6 @@ function EditNote() {
     fetchData();
   }, []);
 
-  console.log(currentNote);
 
   function editNote(event) {
     event.preventDefault();
@@ -62,10 +69,21 @@ function EditNote() {
     }
     
     axios
-      .put("http://localhost:3000/updateNote", formData)
+      .put("http://localhost:3000/updateNote", formData, {
+          headers: {
+            "Authorization": `Bearer ${userId}` 
+          }
+        })
       .then((response) => {
         if (response.data.message === "Success") {
-          navigate("/")
+          dispatch(noteActions.setNoteId(undefined))
+          if(page==="search") {
+            navigate("/searchNote")
+          }
+
+          else {
+            navigate("/")
+          }     
       }})
       .catch((error) => {
         if (error.response) {
@@ -78,7 +96,12 @@ function EditNote() {
   }
 
   function cancelAction() {
+    dispatch(noteActions.setNoteId(undefined))
     navigate("/");
+
+    if(page==="search") {
+      navigate("/searchNote")
+    }
   }
 
   function handleCommand(command) {
@@ -104,7 +127,7 @@ function EditNote() {
     <>
       <ToastContainer newestOnTop position="bottom-right" />
       <form onSubmit={editNote}>
-        <div className="mx-auto w-[35rem] border-solid border-2 border-stone-400 p-8 rounded-md mb-16">
+        <div className="mx-auto w-[35rem] bg-yellow-100 border-2 border-yellow-800 p-8 rounded-md mb-16">
           <h1 className="text-4xl font-bold text-center">Edit Note</h1>
           <div>
             <NoteInput

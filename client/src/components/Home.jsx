@@ -4,10 +4,11 @@ import NewNote from "./Note/NewNote.jsx";
 import NoteNotSelected from "./Note/NoteNotSelected.jsx";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
-
+import { useLoaderData } from "react-router-dom";
 function Home() {
   const noteId = useSelector((state) => state.note.noteId);
-
+  const posts = useLoaderData();
+  console.log(posts)
   let content = <SelectedNote />;
 
   if (noteId === null) {
