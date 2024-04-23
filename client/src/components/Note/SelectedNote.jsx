@@ -10,6 +10,7 @@ function SelectedProject() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const noteId = useSelector((state) => state.note.noteId);
+  const accessToken = useSelector((state) => state.user.token);
   const userId = useSelector((state) => state.user.userId);
   const [currentNote, setCurrentNote] = useState({
     notes: {
@@ -29,10 +30,10 @@ function SelectedProject() {
 
         const response = await axios.post(
           "http://localhost:3000/getCurrentNote",
-          { id: noteId },
+          { noteId, userId },
           {
             headers: {
-              Authorization: `Bearer ${userId}`,
+              Authorization: `Bearer ${accessToken}`,
             },
           }
         );
@@ -46,7 +47,7 @@ function SelectedProject() {
     };
 
     fetchData();
-  }, [noteId]);
+  });
 
   function editNote() {
     navigate("/editNote");
@@ -55,11 +56,10 @@ function SelectedProject() {
   function deleteNote() {
     try {
       axios.post(
-        "http://localhost:3000/deleteNote",
-        { id: noteId },
+        "http://localhost:3000/deleteNote", { noteId, userId},
         {
           headers: {
-            Authorization: `Bearer ${userId}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );

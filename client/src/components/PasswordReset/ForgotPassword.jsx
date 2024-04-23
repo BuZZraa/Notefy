@@ -52,7 +52,7 @@ function ForgotPassword() {
 
       <form className="my-10" onSubmit={handleSubmit}>
         <div className="flex flex-col space-y-5">
-          <label for="email">
+          <label htmlFor="email">
             <p className="font-medium text-slate-700 pb-2">Email address</p>
             <input
               name="email"

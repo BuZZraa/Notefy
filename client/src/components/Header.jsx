@@ -1,24 +1,30 @@
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { noteActions, userActions } from "../store/userStore";
+import { forgotPasswordActions, noteActions, userActions } from "../store/userStore";
 import axios from "axios";
 import errorNotification from "../utils/notification";
 
 function Header() {
   const userId = useSelector((state) => state.user.userId);
+  const accessToken = useSelector((state) => state.user.token);
   const dispatch = useDispatch();
   function handleLogout() {
     axios
-      .post("http://localhost:3000/logout")
+      .post("http://localhost:3000/logout", {}, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      })
       .then((response) => {
         if (response.data.message === "Success") {
           dispatch(userActions.logout());
           dispatch(noteActions.setNoteId(undefined));
+          dispatch(forgotPasswordActions.clearVerificationInfo());
+          dispatch(userActions.setSessionExpired(true));
         } else {
           errorNotification("Failed to logout.");
         }
       })
-
       .catch((error) => {
         errorNotification(error.message);
       });
@@ -83,18 +89,18 @@ function Header() {
                 </>
               ) : (
                 <>
-                  <button class="relative w-10 h-10 overflow-hidden bg-indigo-300 rounded-full hover:bg-indigo-500 transition duration-300">
+                  <button className="relative w-10 h-10 overflow-hidden bg-indigo-300 rounded-full hover:bg-indigo-500 transition duration-300">
                     <NavLink to="/userProfile">
                       <svg
-                        class="absolute w-12 h-12 text-white -left-1 top-1/2 transform -translate-y-1/2 hover:text-stone-200"
+                        className="absolute w-12 h-12 text-white -left-1 top-1/2 transform -translate-y-1/2 hover:text-stone-200"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                          clip-rule="evenodd"
+                          clipRule="evenodd"
                         ></path>
                       </svg>
                     </NavLink>

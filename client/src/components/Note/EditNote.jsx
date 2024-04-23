@@ -14,6 +14,7 @@ function EditNote() {
   const page = searchParams.get("page");
   const userId = useSelector((state) => state.user.userId);
   const noteId = useSelector((state) => state.note.noteId);
+  const accessToken = useSelector((state) => state.user.token);
   const title = useRef();
   const description = useRef();
   const dueDate = useRef();
@@ -33,11 +34,10 @@ function EditNote() {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:3000/getCurrentNote",
-          { id: noteId },
+          "http://localhost:3000/getCurrentNote", { noteId, userId },
           {
             headers: {
-              Authorization: `Bearer ${userId}`,
+              Authorization: `Bearer ${accessToken}`,
             },
           }
         );
@@ -58,6 +58,7 @@ function EditNote() {
     const fd = new FormData(event.target);
     const formData = Object.fromEntries(fd.entries());
     formData.noteId = noteId;
+    formData.userId = userId;
     const enteredTitle = title.current.value;
     const enteredDescription = description.current.value;
     const enteredDueDate = dueDate.current.value;
@@ -74,7 +75,7 @@ function EditNote() {
     axios
       .put("http://localhost:3000/updateNote", formData, {
         headers: {
-          Authorization: `Bearer ${userId}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .then((response) => {

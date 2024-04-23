@@ -9,6 +9,7 @@ import axios from "axios";
 function ChangePassword() {
   const navigate = useNavigate();
   const userId = useSelector((state) => state.user.userId);
+  const accessToken = useSelector((state) => state.user.token);
   function handleCancel() {
     navigate("/userProfile");
   }
@@ -34,10 +35,11 @@ function ChangePassword() {
             currentPassword,
             newPassword,
             reenterNewPassword,
+            userId
           },
           {
             headers: {
-              Authorization: `Bearer ${userId}`,
+              Authorization: `Bearer ${accessToken}`,
             },
           }
         )

@@ -15,6 +15,7 @@ import SearchNote from "./components/Note/SearchNote.jsx";
 import UserProfile from "./components/UserProfile/UserProfile.jsx";
 import EditProfile from "./components/UserProfile/EditProfile.jsx";
 import ChangePassword from "./components/UserProfile/ChangePassword.jsx";
+import SecureRegistrationAndLogin from "./utils/SecureRegistrationAndLogin.jsx";
 
 function App() {
 
@@ -25,8 +26,8 @@ function App() {
       errorElement: <PageNotFound />,
       children: [
         { index: true, element: <SecureRoute element={<Home />} /> },
-        { path:"register", element: <Register /> },
-        { path: "login", element: <Login /> },
+        { path:"register", element: <SecureRegistrationAndLogin element={ <Register/> } /> },
+        { path: "login", element: <SecureRegistrationAndLogin element={ <Login /> } /> },
         { path: "userProfile", element: <SecureRoute element={<UserProfile />} /> },
         { path: "editProfile", element: <SecureRoute element={<EditProfile />} /> },
         { path: "changePassword", element: <SecureRoute element={<ChangePassword />} /> },

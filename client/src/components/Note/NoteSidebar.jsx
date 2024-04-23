@@ -4,16 +4,29 @@ import { capitalize } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import errorNotification from "../../utils/notification.js";
-import { noteActions } from "../../store/userStore.js";
+import { noteActions, userActions } from "../../store/userStore.js";
+import { jwtDecode } from "jwt-decode";
+import SessionExpiredModal from "../../utils/SessionExpiredModal.jsx";
 
 function ProjectSidebar() {
   const userId = useSelector((state) => state.user.userId);
+  const accessToken = useSelector((state) => state.user.token);
   const noteId = useSelector((state) => state.note.noteId);
+  const sessionExpired = useSelector((state) => state.user.sessionExpired)
   const [notes, setNotes] = useState([
     { notes: { _id: "loading...", title: "loading..." } },
   ]);
   const [user, setUser] = useState("User");
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const decodedToken = jwtDecode(accessToken);
+    const currentTime = Date.now() / 1000;
+
+    if (decodedToken.exp < currentTime) {
+      dispatch(userActions.setSessionExpired(true))
+    }
+  }, [accessToken, sessionExpired, noteId]);
 
   useEffect(
     () => async () => {
@@ -23,9 +36,9 @@ function ProjectSidebar() {
           return;
         }
 
-        const response = await axios.get("http://localhost:3000/getUser", {
+        const response = await axios.post("http://localhost:3000/getUser", {userId}, {
           headers: {
-            Authorization: `Bearer ${userId}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
 
@@ -35,21 +48,19 @@ function ProjectSidebar() {
       } catch (error) {
         errorNotification(error);
       }
-    },
-    [userId]
-  );
+    }, [userId]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData()  {
       try {
         if (userId === "") {
           errorNotification("User id not set to retrieve notes.");
           return;
         }
 
-        const response = await axios.get("http://localhost:3000/getnotes", {
+        const response = await axios.post("http://localhost:3000/getnotes", {userId}, {
           headers: {
-            Authorization: `Bearer ${userId}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
 
@@ -98,6 +109,9 @@ function ProjectSidebar() {
           </li>
         ))}
       </ul>
+      {sessionExpired && (
+        <SessionExpiredModal />
+      )}
     </aside>
   );
 }

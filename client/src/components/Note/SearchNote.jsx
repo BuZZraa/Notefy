@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 function SearchNote() {
   const userId = useSelector((state) => state.user.userId);
   const noteId = useSelector((state) => state.note.noteId);
+  const accessToken = useSelector((state) => state.user.token);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchResults, setSearchResults] = useState([]);
@@ -31,11 +32,10 @@ function SearchNote() {
 
     axios
       .post(
-        "http://localhost:3000/searchNote",
-        { title, sortBy },
+        "http://localhost:3000/searchNote", { title, sortBy, userId },
         {
           headers: {
-            Authorization: `Bearer ${userId}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       )
