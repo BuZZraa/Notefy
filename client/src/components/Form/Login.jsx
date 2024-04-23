@@ -8,6 +8,7 @@ import errorNotification from "../../utils/notification";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../store/userStore";
 import { Link } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
 
 function Login() {
   const navigate = useNavigate();
@@ -21,8 +22,11 @@ function Login() {
       .post("http://localhost:3000/login", formData)
       .then((response) => {
         if (response.data.message === "Success") {
+          dispatch(userActions.setSessionExpired(false))
+          dispatch(userActions.setToken(response.data.accessToken))
+          const decodedToken = jwtDecode(response.data.accessToken);
+          dispatch(userActions.setUser(decodedToken.userId));
           navigate("/");
-          dispatch(userActions.setUser(response.data.user));
         }
       })
 

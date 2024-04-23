@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 
 function EditProfile() {
   const userId = useSelector((state) => state.user.userId)
+  const accessToken = useSelector((state) => state.user.token);
   const location = useLocation();
   const navigate = useNavigate()
   const userData = location.state?.user; 
@@ -26,9 +27,9 @@ function EditProfile() {
       }
 
     axios
-      .put("http://localhost:3000/updateProfile", {firstName, lastName, email}, {
+      .put("http://localhost:3000/updateProfile", {firstName, lastName, email, userId}, {
         headers: {
-          Authorization: `Bearer ${userId}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .then((response) => {

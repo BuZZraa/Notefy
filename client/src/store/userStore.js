@@ -1,16 +1,27 @@
-import {createSlice, configureStore} from "@reduxjs/toolkit";
+import {createSlice, combineReducers, configureStore} from "@reduxjs/toolkit";
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        userId: null
+        userId: null,
+        token: null,
+        sessionExpired: false
     },
     reducers: {
         setUser(state, action) {
             state.userId = action.payload
         },
+        setToken(state, action) {
+            state.token = action.payload
+        },
         logout(state) {
             state.userId = null
+            state.token = null
+        },
+        setSessionExpired(state, action) {
+            state.sessionExpired = action.payload;
         }
     }
 });
@@ -23,7 +34,7 @@ const noteSlice = createSlice({
     reducers: {
         setNoteId(state, action) {
             state.noteId = action.payload
-        }
+        }      
     }
 });
 
@@ -46,15 +57,27 @@ const forgotPasswordSlice = createSlice({
     }
 })
 
-const store = configureStore({
-    reducer: { 
-        user: userSlice.reducer, 
-        note: noteSlice.reducer,
-        forgotPassword: forgotPasswordSlice.reducer
-    }
-});
+const rootReducer = combineReducers({
+    user: userSlice.reducer,
+    note: noteSlice.reducer,
+    forgotPassword: forgotPasswordSlice.reducer,
+  });
+  
+  const persistConfig = {
+    key: "root",
+    storage,
+  };
+  
+  const persistedReducer = persistReducer(persistConfig, rootReducer);
+  
+  const store = configureStore({
+    reducer: persistedReducer,
+  });
+
+  const persistor = persistStore(store);
 
 export const userActions = userSlice.actions;
 export const noteActions = noteSlice.actions;
 export const forgotPasswordActions = forgotPasswordSlice.actions;
+export {persistor}
 export default store;

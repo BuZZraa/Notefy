@@ -14,6 +14,7 @@ function NewNote() {
   const cancelButtonRef = useRef();
   const saveButtonRef = useRef();
   const userId = useSelector((state) => state.user.userId);
+  const accessToken = useSelector((state) => state.user.token);
   const dispatch = useDispatch();
 
   function handleCommand(command, event) {
@@ -62,6 +63,7 @@ function NewNote() {
     event.preventDefault();
     const fd = new FormData(event.target);
     const formData = Object.fromEntries(fd.entries());
+    formData.userId = userId;
     const enteredTitle = title.current.value;
     const enteredDescription = description.current.value;
     const enteredDueDate = dueDate.current.value;
@@ -78,7 +80,7 @@ function NewNote() {
     axios
       .post("http://localhost:3000/addnote", formData, {
         headers: {
-          Authorization: `Bearer ${userId}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .catch((error) => {
