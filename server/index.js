@@ -12,6 +12,7 @@ import crypto from "crypto";
 import sendMail from "./Mailer.js";
 import jwt from "jsonwebtoken";
 const app = express();
+const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,12}$/;
 
 app.use(express.json());
 app.use(cors());
@@ -38,15 +39,20 @@ async function authenticateToken (req, res, next) {
 
 app.post("/register", async (req, res) => {
   try {
-    const { firstName, lastName, password, reenterPassword, email } = req.body;
+    const { firstName, lastName, password, reenterPassword, email, dateOfBirth, gender, address, phoneNumber } = req.body;
 
-    if (!firstName || !lastName || !password || !reenterPassword || !email)  return res.status(400).json({message: "Enter values for all fields."});
+    if (!firstName || !lastName || !password || !reenterPassword || !email 
+    || !dateOfBirth || !gender || !address || !phoneNumber)  return res.status(400).json({message: "Enter values for all fields."});
 
     if(!validator.validate(email)) return res.status(400).json({message: "Enter a valid email."});
     
     if(password !== reenterPassword) return res.status(400).json({message: "Passwords don't match."});
 
     if (!(password.length >= 8 && password.length <= 12)) return res.status(400).json({message: "Password must be between 8 and 12 characters."});
+
+    if (!passwordRegex.test(password)) return res.status(400).json({message: "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8 and 12 characters."});
+    
+    if(phoneNumber.length !== 10) return res.status(400).json({message: "Phone number must be 10-digit."})
 
     const existingUser = await UsersModel.findOne({ email: email });
     if(existingUser) return res.status(409).json({ message: "User already exists." });
@@ -163,6 +169,8 @@ app.post("/resetPassword", async(req, res) => {
     
     if (!(password.length >= 8 && password.length <= 12)) return res.status(400).json({message: "Password must be between 8 and 12 characters."});
 
+    if (!passwordRegex.test(password)) return res.status(400).json({message: "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8 and 12 characters."});
+
     const hashedPassword = await bcrypt.hash(password, 10);
     await UsersModel.updateOne({email: email}, {password: hashedPassword})
     return res.status(200).json({message: "Success"});
@@ -201,20 +209,14 @@ app.post("/getUser", authenticateToken, async (req, res) => {
 
 app.put("/updateProfile", authenticateToken, async(req, res) => {
   try {
-    const {firstName, lastName, email, userId} = req.body
-
+    const { userId, firstName, lastName, email, dateOfBirth, gender, address, phoneNumber} = req.body;
     if(userId === "") return res.status(401).json({message: "User id required to update the notes."});
     
-    if(firstName === "" || lastName === "" || email === "") return res.status(400).json({message: "Enter value for all input fields."});
+    if (!firstName || !lastName || !email || !dateOfBirth || !gender || !address || !phoneNumber)  return res.status(400).json({message: "Enter values for all fields."});
     
-    await UsersModel.updateOne(
-      {_id: userId},
-      {
-        firstName,
-        lastName,
-        email
-      }
-    )
+    if(phoneNumber.length !== 10) return res.status(400).json({message: "Phone number must be 10-digit."})
+    
+    await UsersModel.updateOne({_id: userId}, {...req.body})
     return res.status(200).json({ message: "Success" });
   }
 
@@ -239,9 +241,12 @@ app.put("/changePassword", authenticateToken, async(req, res) => {
     
     if (!(newPassword.length >= 8 && newPassword.length <= 12)) return res.status(400).json({message: "Password must be between 8 and 12 characters."});
     
+    if (!passwordRegex.test(newPassword)) return res.status(400).json({message: "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8 and 12 characters."});
+
     const existingUser = await UsersModel.findOne({_id: userId});
     if(!existingUser) return res.status(401).json({ message: "User not found." });
     
+
     const validCurrentPassword = await bcrypt.compare(currentPassword, existingUser.password);
     if(!validCurrentPassword) return res.status(401).json({ message: "Enter valid current password." });
     

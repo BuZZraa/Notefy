@@ -122,7 +122,7 @@ function SearchNote() {
           </div>
           <div className="flex items-center mt-4">
             <input
-              type="text"
+              type="search"
               className="border border-gray-400 px-4 py-2 rounded-md flex-grow mr-2"
               placeholder="Search by title..."
               name="title"
