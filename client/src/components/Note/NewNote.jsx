@@ -16,8 +16,9 @@ function NewNote() {
   const userId = useSelector((state) => state.user.userId);
   const accessToken = useSelector((state) => state.user.token);
   const dispatch = useDispatch();
+  
 
-  function handleCommand(command, event) {
+  function handleCommand(command) {
     const lowerCommand = command.toLowerCase();
     if (lowerCommand.includes("add title")) {
       const titleToAdd = command.replace("add title", "").trim();
@@ -40,7 +41,6 @@ function NewNote() {
     } else if (lowerCommand.includes("cancel")) {
       cancelButtonRef.current.click();
     } else if (lowerCommand.includes("save")) {
-      event.preventDefault();
       saveButtonRef.current.click();
     }
   }
@@ -110,12 +110,19 @@ function NewNote() {
               name="addedDate"
               value={new Date().toISOString().slice(0, 10)}
             />
-            <NoteInput type="text" label="Title" ref={title} name="title" />
+            <NoteInput
+              type="text"
+              label="Title"
+              ref={title}
+              name="title"
+              placeholder="Add a title."
+            />
             <NoteInput
               label="Description"
               ref={description}
               textarea
               name="description"
+              placeholder="Add a description."
             />
             <NoteInput
               type="date"

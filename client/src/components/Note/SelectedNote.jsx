@@ -1,17 +1,22 @@
 import { useDispatch, useSelector } from "react-redux";
 import { capitalize } from "lodash";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import errorNotification from "../../utils/notification.js";
 import axios from "axios";
 import { noteActions } from "../../store/userStore.js";
 import { useNavigate } from "react-router-dom";
+import SpeechToTextConverter from "../../utils/SpeechToTextConverter";
+import textToSpeech from "../../utils/TextToSpeechConverter.js";
 
 function SelectedProject() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const editButtonRef = useRef();
+  const deleteButtonRef = useRef();
   const noteId = useSelector((state) => state.note.noteId);
   const accessToken = useSelector((state) => state.user.token);
   const userId = useSelector((state) => state.user.userId);
+
   const [currentNote, setCurrentNote] = useState({
     notes: {
       title: "loading...",
@@ -47,7 +52,7 @@ function SelectedProject() {
     };
 
     fetchData();
-  });
+  }, [noteId, userId, accessToken]);
 
   function editNote() {
     navigate("/editNote");
@@ -56,7 +61,8 @@ function SelectedProject() {
   function deleteNote() {
     try {
       axios.post(
-        "http://localhost:3000/deleteNote", { noteId, userId},
+        "http://localhost:3000/deleteNote",
+        { noteId, userId },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -68,6 +74,22 @@ function SelectedProject() {
       errorNotification(error);
     }
   }
+
+  function handleCommand(command) {
+    const lowerCommand = command.toLowerCase();
+    
+    if (lowerCommand.includes("title")) {
+      textToSpeech(currentNote.notes.title);
+    } else if (lowerCommand.includes("description")) {
+      textToSpeech(currentNote.notes.description);
+    } else if (lowerCommand.includes("date")) {
+      textToSpeech(currentNote.notes.dueDate);
+    } else if (lowerCommand.includes("delete")) {
+      deleteButtonRef.current.click();
+    } else if (lowerCommand.includes("edit")) {
+      editButtonRef.current.click();
+    }
+  }; 
 
   const formattedDate = new Date(
     currentNote?.notes?.dueDate
@@ -91,15 +113,22 @@ function SelectedProject() {
         </div>
       )}
       <div className="mt-4">
+        <SpeechToTextConverter
+          type="button"
+          className="px-4 py-2 mr-2 rounded-md bg-blue-600 text-stone-100 hover:bg-blue-700"
+          onCommand={handleCommand}
+        />
         <button
-          className="bg-blue-700 px-4 py-2 rounded-md text-white hover:bg-blue-800 mr-2"
+          className="bg-green-600 px-4 py-2 rounded-md text-white hover:bg-green-700 mr-2"
           onClick={editNote}
+          ref={editButtonRef}
         >
           Edit Note
         </button>
         <button
           className="bg-red-700 px-4 py-2 rounded-md text-white hover:bg-red-800"
           onClick={deleteNote}
+          ref={deleteButtonRef}
         >
           Delete Note
         </button>

@@ -1,5 +1,14 @@
 import {createSlice, combineReducers, configureStore} from "@reduxjs/toolkit";
-import { persistReducer, persistStore } from "redux-persist";
+import {
+    persistStore,
+    persistReducer,
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+  } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 const userSlice = createSlice({
@@ -72,6 +81,12 @@ const rootReducer = combineReducers({
   
   const store = configureStore({
     reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    })
   });
 
   const persistor = persistStore(store);

@@ -12,6 +12,8 @@ function UserProfile() {
     firstName: "Loading...",
     lastName: "Loading...",
     email: "Loading...",
+    gender: "Loading...",
+    dateOfBirth: "01-01-2024"
   });
 
   useEffect(() => {
@@ -46,22 +48,42 @@ function UserProfile() {
   return (
     <div className="bg-gray-100 rounded-lg shadow-md px-6 py-8 max-w-md mx-auto border border-stone-200">
       <h2 className="text-2xl font-semibold text-center mb-6">User Profile</h2>
-      <div className="grid grid-rows-3 gap-8">
+      <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col">
-          <label className="text-gray-600 text-lg font-medium">
+          <label className="text-stone-800 text-lg font-medium">
             First Name:
           </label>
-          <p className="text-lg">{" "+userData.firstName}</p>
+          <p className="text-lg text-stone-600">{" " + userData.firstName}</p>
         </div>
         <div className="flex flex-col">
-          <label className="text-gray-600 text-lg font-medium">
+          <label className="text-stone-800 text-lg font-medium">
             Last Name:
           </label>
-          <p className="text-lg">{userData.lastName}</p>
+          <p className="text-lg text-stone-600">{userData.lastName}</p>
         </div>
         <div className="flex flex-col">
-          <label className="text-gray-600 text-lg font-medium">Email:</label>
-          <p className="text-lg">{userData.email}</p>
+          <label className="text-stone-800 text-lg font-medium">
+            Date of Birth:
+          </label>
+          <p className="text-lg text-stone-600">{userData.dateOfBirth}</p>
+        </div>
+        <div className="flex flex-col">
+          <label className="text-stone-800 text-lg font-medium">Email:</label>
+          <p className="text-lg text-stone-600">{userData.email}</p>
+        </div>
+        <div className="flex flex-col">
+          <label className="text-stone-800 text-lg font-medium">Gender:</label>
+          <p className="text-lg text-stone-600">{userData.gender}</p>
+        </div>
+        <div className="flex flex-col">
+          <label className="text-stone-800 text-lg font-medium">Address:</label>
+          <p className="text-lg text-stone-600">{userData.address}</p>
+        </div>
+        <div className="flex flex-col">
+          <label className="text-stone-800 text-lg font-medium">
+            Phone Number:
+          </label>
+          <p className="text-lg text-stone-600">{userData.phoneNumber}</p>
         </div>
       </div>
       <div className="mt-8 flex justify-end">
