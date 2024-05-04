@@ -16,6 +16,7 @@ import UserProfile from "./components/UserProfile/UserProfile.jsx";
 import EditProfile from "./components/UserProfile/EditProfile.jsx";
 import ChangePassword from "./components/UserProfile/ChangePassword.jsx";
 import SecureRegistrationAndLogin from "./utils/SecureRegistrationAndLogin.jsx";
+import UserManualPage from "./components/UserManualPage.jsx";
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
         { path: "changePassword", element: <SecureRoute element={<ChangePassword />} /> },
         { path: "editNote", element: <SecureRoute element={<EditNote />} /> },
         { path: "searchNote", element: <SecureRoute element={ <SearchNote />} />},
+        { path: "userManual", element: <SecureRoute element={ <UserManualPage />} />},
         { path: "aboutus", element: <AboutUs />},
         { path: "forgotPassword", element: <ForgotPassword /> },
         { path: "enterCode", element: <SecureForgotPassword element={<EnterCode />} /> },
