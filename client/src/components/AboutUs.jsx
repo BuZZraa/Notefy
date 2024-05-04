@@ -54,8 +54,8 @@ function Testimonials() {
 // AboutUs component
 function AboutUs() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="max-w-4xl w-full p-8 bg-white rounded-lg shadow-lg">
+    <div className="flex flex-col items-center justify-center bg-gray-100">
+      <div className="max-w-4xl w-full p-8 bg-white rounded-lg shadow-lg my-4">
         <h1 className="text-3xl font-bold mb-4">About Our Notes App</h1>
         <p className="text-gray-700 mb-4 text-justify">
           Our notes app is designed to help you organize your thoughts, ideas,
