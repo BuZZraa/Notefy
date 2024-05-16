@@ -39,10 +39,10 @@ async function authenticateToken (req, res, next) {
 
 app.post("/register", async (req, res) => {
   try {
-    const { firstName, lastName, password, reenterPassword, email, dateOfBirth, gender, address, phoneNumber } = req.body;
+    const { firstName, lastName, password, reenterPassword, email, dateOfBirth, gender, address, phoneNumber, role } = req.body;
 
     if (!firstName || !lastName || !password || !reenterPassword || !email 
-    || !dateOfBirth || !gender || !address || !phoneNumber)  return res.status(400).json({message: "Enter values for all fields."});
+    || !dateOfBirth || !gender || !address || !phoneNumber || !role)  return res.status(400).json({message: "Enter values for all fields."});
 
     if(!validator.validate(email)) return res.status(400).json({message: "Enter a valid email."});
     
@@ -91,10 +91,11 @@ app.post("/login", async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) return res.status(401).json({ message: "The password you entered is incorrect." });
     
-    const currentUser = { userId: user._id }
+    const currentUser = { userId: user._id, role: user.role, name: user.firstName }
     const accessToken = jwt.sign(currentUser, process.env.ACCESS_KEY, {expiresIn: "10m"})
-
     const validToken = new ValidTokenModel({
+      userId: user._id,
+      role: user.role,
       token: accessToken
     });
     await validToken.save()
@@ -187,6 +188,7 @@ app.post("/resetPassword", async(req, res) => {
 app.post("/getUser", authenticateToken, async (req, res) => {
   try {
     const userId = req.body.userId;
+
     if(userId === "") return res.status(401).json({message: "User id required to get the notes."});
 
     const user = await UsersModel.findOne({ _id: userId });
@@ -202,7 +204,32 @@ app.post("/getUser", authenticateToken, async (req, res) => {
         message: "An unexpected error occurred. Please try again later.",
       });
   }
+})
 
+
+
+app.post("/getUsers", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const role = req.body.role;
+
+    if(userId === "") return res.status(401).json({message: "User id required to get the notes."});
+
+    if(role !== "admin") return res.status(403).json({message: "Admin privileges required to view users."});
+
+    const users = await UsersModel.find({ role: "user"});
+    return res.status(200).json({ message: "Success", users});
+
+  }
+
+  catch(error) {
+    console.error("Login error:", error);
+    return res
+      .status(500)
+      .json({
+        message: "An unexpected error occurred. Please try again later.",
+      });
+  }
 })
 
 
@@ -266,14 +293,13 @@ app.put("/changePassword", authenticateToken, async(req, res) => {
 
 
 
-
 app.post("/addnote", authenticateToken, async (req, res) => {
   const userId = req.body.userId;
   try {
     if(userId === "") return res.status(401).json({message: "User id required to get the notes."});
     
     const newNote = await NotesModel.create({
-      userId: userId, // Assign the userId from session
+      userId: userId, 
       notes: req.body, 
     });
 
@@ -283,7 +309,6 @@ app.post("/addnote", authenticateToken, async (req, res) => {
     return res.status(500).json({ message: "An unexpected error occurred. Please try again later." });
   }
 });
-
 
 
 
@@ -345,6 +370,25 @@ app.post("/deleteNote", authenticateToken, async(req, res) => {
 
 
 
+app.post("/deleteUser", authenticateToken, async(req, res) => {
+  const userId = req.body.userId
+
+  try {
+    
+    if(userId === "") return res.status(401).json({message: "User id required to delete the notes."});
+    
+    await UsersModel.deleteOne({ _id: userId });
+    return res.status(200).json({ message: "Successfully deleted note."});
+  }
+
+  catch(error) {
+    console.error("Error deleting user:", error);
+    return res.status(500).json({ message: "An unexpected error occurred. Please try again later." });
+  }
+})
+
+
+
 app.put("/updateNote",  authenticateToken, async(req, res) => {
   const {title, description, addedDate, dueDate, noteId, userId} = req.body
 
@@ -372,6 +416,8 @@ app.put("/updateNote",  authenticateToken, async(req, res) => {
     return res.status(500).json({ message: "An unexpected error occurred. Please try again later." });
   }
 })
+
+
 
 app.post("/searchNote", authenticateToken, async (req, res) => {
   const { title, sortBy, userId } = req.body
@@ -405,5 +451,52 @@ app.post("/searchNote", authenticateToken, async (req, res) => {
     return res.status(500).json({ message: "An unexpected error occurred. Please try again later." });
   }
 });
+
+
+
+app.post("/dashboardData", authenticateToken, async (req, res) => {
+  try {
+    const countUsers = await UsersModel.countDocuments({});
+    const countNotes = await NotesModel.countDocuments({});
+    const countTokens = await ValidTokenModel.countDocuments({});
+    res.status(200).json({ message: "Success", count: {
+      usersCount: countUsers,
+      notesCount: countNotes,
+      tokensCount: countTokens
+    }});
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
+app.put("/editUser", authenticateToken, async (req, res) => {
+  try {
+    const { userId, user, firstName, lastName, email, 
+      role, dateOfBirth, gender, address, phoneNumber} = req.body;
+
+    if(userId === "") return res.status(401).json({message: "User id required to update the notes."});
+    
+    if(user === "") return res.status(401).json({message: "User required to update the notes."});
+
+    if(role !== "admin") return res.status(403).json({message: "Admin privileges required to view users."});
+
+    if (!firstName || !lastName || !email || !dateOfBirth || !gender || !address || !phoneNumber)  return res.status(400).json({message: "Enter values for all fields."});
+    
+    if(phoneNumber.length !== 10) return res.status(400).json({message: "Phone number must be 10-digit."})
+    
+    await UsersModel.updateOne({_id: user}, {
+      ...req.body,
+      role: "user"
+    })
+    return res.status(200).json({ message: "Success" });
+  }
+
+  catch(error) {
+    console.error("Error updating note:", error);
+    return res.status(500).json({ message: "An unexpected error occurred. Please try again later." });
+  }
+})
 
 app.listen(3000, () => console.log("Server is running on port 3000!"));

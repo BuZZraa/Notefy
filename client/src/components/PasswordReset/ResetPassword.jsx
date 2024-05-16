@@ -5,7 +5,7 @@ import errorNotification, {
 } from "../../utils/notification";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { forgotPasswordActions } from "../../store/userStore";
+import { forgotPasswordActions } from "../../store/forgotPasswordSlice";
 
 function ResetPassword() {
   const dispatch = useDispatch();

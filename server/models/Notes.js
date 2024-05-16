@@ -23,7 +23,7 @@ const NotesSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "userdetails",
-        required: false // Need to be changed to true after adding session
+        required: true
     }, 
     
     notes: {

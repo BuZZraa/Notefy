@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 import errorNotification from "../../utils/notification";
 import { capitalize } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
-import { noteActions } from "../../store/userStore";
+import { notesActions } from "../../store/notesSlice";
 import { useNavigate } from "react-router-dom";
 
 function SearchNote() {
@@ -17,7 +17,7 @@ function SearchNote() {
   const [searchResults, setSearchResults] = useState([]);
 
   function handleSelectProject(id) {
-    dispatch(noteActions.setNoteId(id));
+    dispatch(notesActions.setNoteId(id));
     navigate("/editNote?page=search");
   }
 

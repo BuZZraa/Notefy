@@ -1,6 +1,3 @@
-import React from "react";
-
-// KeyFeatures component
 function KeyFeatures() {
   return (
     <div className="mb-8">
@@ -15,7 +12,6 @@ function KeyFeatures() {
   );
 }
 
-// Testimonials component
 function Testimonials() {
   const testimonials = [
     {

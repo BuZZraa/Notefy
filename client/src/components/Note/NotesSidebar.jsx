@@ -4,11 +4,13 @@ import { capitalize } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import errorNotification from "../../utils/notification.js";
-import { noteActions, userActions } from "../../store/userStore.js";
+import { usersActions } from "../../store/usersSlice.js";
+import { notesActions } from "../../store/notesSlice.js";
 import { jwtDecode } from "jwt-decode";
 import SessionExpiredModal from "../../utils/SessionExpiredModal.jsx";
 
-function ProjectSidebar() {
+function NotesSidebar() {
+  const user = useSelector((state) => state.user.name)
   const userId = useSelector((state) => state.user.userId);
   const accessToken = useSelector((state) => state.user.token);
   const noteId = useSelector((state) => state.note.noteId);
@@ -16,7 +18,6 @@ function ProjectSidebar() {
   const [notes, setNotes] = useState([
     { notes: { _id: "loading...", title: "loading..." } },
   ]);
-  const [user, setUser] = useState("User");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,31 +25,9 @@ function ProjectSidebar() {
     const currentTime = Date.now() / 1000;
 
     if (decodedToken.exp < currentTime) {
-      dispatch(userActions.setSessionExpired(true))
+      dispatch(usersActions.setSessionExpired(true))
     }
   }, [accessToken, sessionExpired, noteId]);
-
-  useEffect(
-    () => async () => {
-      try {
-        if (userId === "") {
-          errorNotification("User id not set to retrieve notes.");
-          return;
-        }
-
-        const response = await axios.post("http://localhost:3000/getUser", {userId}, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        if (response && response.data) {
-          setUser(response.data.user.firstName);
-        }
-      } catch (error) {
-        errorNotification(error);
-      }
-    }, [userId]);
 
   useEffect(() => {
     async function fetchData()  {
@@ -76,11 +55,11 @@ function ProjectSidebar() {
   });
 
   function handleSelectProject(id) {
-    dispatch(noteActions.setNoteId(id));
+    dispatch(notesActions.setNoteId(id));
   }
 
   function addNote() {
-    dispatch(noteActions.setNoteId(null));
+    dispatch(notesActions.setNoteId(null));
   }
 
   return (
@@ -116,4 +95,4 @@ function ProjectSidebar() {
   );
 }
 
-export default ProjectSidebar;
+export default NotesSidebar;

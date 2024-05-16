@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import FormInput from "../Form/FormInput";
+
 function EditProfile() {
   const userId = useSelector((state) => state.user.userId);
   const accessToken = useSelector((state) => state.user.token);
@@ -43,7 +44,7 @@ function EditProfile() {
           let errorMessage = error.response.data.message;
           errorNotification(errorMessage);
         } else {
-          errorNotification(error.message);
+          errorNotification(error.message || "An error occurred!");
         }
       });
   }
@@ -87,7 +88,7 @@ function EditProfile() {
           />
           <FormInput
             label="Date of Birth"
-            value={formData.dateOfBirth}
+            defaultValue={formData.dateOfBirth}
             type="date"
             name="dateOfBirth"
           />

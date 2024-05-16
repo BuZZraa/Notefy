@@ -17,6 +17,9 @@ import EditProfile from "./components/UserProfile/EditProfile.jsx";
 import ChangePassword from "./components/UserProfile/ChangePassword.jsx";
 import SecureRegistrationAndLogin from "./utils/SecureRegistrationAndLogin.jsx";
 import UserManualPage from "./components/UserManualPage.jsx";
+import AdminDashboard from "./components/Admin/AdminDashboard.jsx";
+import AdminViewUsers from "./components/Admin/AdminViewUsers.jsx";
+import AdminEditUser from "./components/Admin/AdminEditUser.jsx";
 
 function App() {
 
@@ -39,8 +42,11 @@ function App() {
         { path: "forgotPassword", element: <ForgotPassword /> },
         { path: "enterCode", element: <SecureForgotPassword element={<EnterCode />} /> },
         { path: "resetPassword", element: <SecureForgotPassword element={<ResetPassword />} /> },
+        { path: "adminDashboard", element: <SecureRoute element= {<AdminDashboard />} /> },
+        { path: "users", element: <SecureRoute element= {<AdminViewUsers />} /> },
+        { path: "editUser", element: <SecureRoute element= {<AdminEditUser />} /> }
       ],
-    },
+    }
   ]);
 
   return <RouterProvider router={router} />;
