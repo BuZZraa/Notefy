@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
-import { userActions } from "../store/userStore.js";
+import { usersActions } from "../store/usersSlice.js";
 import SessionExpiredModal from "./SessionExpiredModal.jsx";
 
 export default function SecureRoute({ element }) {
@@ -18,7 +18,7 @@ export default function SecureRoute({ element }) {
       const currentTime = Date.now() / 1000; 
   
       if (decodedToken.exp < currentTime) {
-        dispatch(userActions.setSessionExpired(true))
+        dispatch(usersActions.setSessionExpired(true))
       }
     }
   }, [accessToken, location]);

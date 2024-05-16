@@ -5,7 +5,7 @@ import errorNotification from "../../utils/notification.js";
 import { ToastContainer } from "react-toastify";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { noteActions } from "../../store/userStore.js";
+import { notesActions } from "../../store/notesSlice.js";
 
 function NewNote() {
   const title = useRef();
@@ -91,11 +91,11 @@ function NewNote() {
           errorNotification(error.message);
         }
       });
-    dispatch(noteActions.setNoteId(undefined));
+    dispatch(notesActions.setNoteId(undefined));
   }
 
   function onCancel() {
-    dispatch(noteActions.setNoteId(undefined));
+    dispatch(notesActions.setNoteId(undefined));
   }
 
   return (

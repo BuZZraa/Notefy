@@ -3,7 +3,7 @@ import { capitalize } from "lodash";
 import { useEffect, useState, useRef, useCallback } from "react";
 import errorNotification from "../../utils/notification.js";
 import axios from "axios";
-import { noteActions } from "../../store/userStore.js";
+import { notesActions } from "../../store/notesSlice.js";
 import { useNavigate } from "react-router-dom";
 import SpeechToTextConverter from "../../utils/SpeechToTextConverter";
 import textToSpeech from "../../utils/TextToSpeechConverter.js";
@@ -69,7 +69,7 @@ function SelectedProject() {
           },
         }
       );
-      dispatch(noteActions.setNoteId(undefined));
+      dispatch(notesActions.setNoteId(undefined));
     } catch (error) {
       errorNotification(error);
     }

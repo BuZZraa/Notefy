@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import errorNotification from "../../utils/notification";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { noteActions } from "../../store/userStore";
+import { notesActions } from "../../store/notesSlice";
 import { useSearchParams } from "react-router-dom";
 
 function EditNote() {
@@ -80,7 +80,7 @@ function EditNote() {
       })
       .then((response) => {
         if (response.data.message === "Success") {
-          dispatch(noteActions.setNoteId(undefined));
+          dispatch(notesActions.setNoteId(undefined));
           if (page === "search") {
             navigate("/searchNote");
           } else {
@@ -99,7 +99,7 @@ function EditNote() {
   }
 
   function cancelAction() {
-    dispatch(noteActions.setNoteId(undefined));
+    dispatch(notesActions.setNoteId(undefined));
     navigate("/");
 
     if (page === "search") {

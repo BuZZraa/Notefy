@@ -1,14 +1,36 @@
-import { useDispatch } from "react-redux";
-import { userActions } from "../store/userStore";
-import { noteActions } from "../store/userStore";
+import { useDispatch, useSelector } from "react-redux";
+import { usersActions } from "../store/usersSlice";
+import { notesActions } from "../store/notesSlice";
+import { forgotPasswordActions } from "../store/forgotPasswordSlice";
+import axios from "axios";
+import errorNotification from "./notification";
 
 export default function SessionExpiredModal() {
+  const accessToken = useSelector((state) => state.user.token);
   const dispatch = useDispatch()
   function handleModalClose() {
-    dispatch(userActions.logout());
-    dispatch(userActions.setUser(null));
-    dispatch(userActions.setSessionExpired(true))
-    dispatch(noteActions.setNoteId(undefined));
+    dispatch(usersActions.logout());
+    dispatch(notesActions.setNoteId(undefined));
+    dispatch(forgotPasswordActions.clearVerificationInfo());
+
+    axios
+    .post("http://localhost:3000/logout", {}, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      }
+    })
+    .then((response) => {
+      if (response.data.message === "Success") {
+        dispatch(usersActions.logout());
+        dispatch(notesActions.setNoteId(undefined));
+        dispatch(forgotPasswordActions.clearVerificationInfo());
+      } else {
+        errorNotification("Failed to logout.");
+      }
+    })
+    .catch((error) => {
+      errorNotification(error.message || "An error occurred!");
+    });
   };
 
     return (
@@ -25,4 +47,4 @@ export default function SessionExpiredModal() {
         </div>
       </div>
     );
-  }
+}

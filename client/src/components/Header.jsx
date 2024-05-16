@@ -1,12 +1,15 @@
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { forgotPasswordActions, noteActions, userActions } from "../store/userStore";
+import { usersActions } from "../store/usersSlice";
+import { forgotPasswordActions } from "../store/forgotPasswordSlice";
+import { notesActions } from "../store/notesSlice";
 import axios from "axios";
 import errorNotification from "../utils/notification";
 
 function Header() {
   const userId = useSelector((state) => state.user.userId);
   const accessToken = useSelector((state) => state.user.token);
+  const role = useSelector((state => state.user.role))
   const dispatch = useDispatch();
   function handleLogout() {
     axios
@@ -17,16 +20,15 @@ function Header() {
       })
       .then((response) => {
         if (response.data.message === "Success") {
-          dispatch(userActions.logout());
-          dispatch(noteActions.setNoteId(undefined));
+          dispatch(usersActions.logout());
+          dispatch(notesActions.setNoteId(undefined));
           dispatch(forgotPasswordActions.clearVerificationInfo());
-          dispatch(userActions.setSessionExpired(true));
         } else {
           errorNotification("Failed to logout.");
         }
       })
       .catch((error) => {
-        errorNotification(error.message);
+        errorNotification(error.message || "An error occurred!");
       });
   }
   return (
@@ -36,8 +38,9 @@ function Header() {
           <nav className="relative flex items-center justify-between h-16 lg:h-20">
             <div className="lg:flex lg:items-center lg:space-x-10">
               <NavLink
-                to=".."
-                relative="route"
+                to={
+                  role === "admin" ? "adminDashboard" : role === "user" ? "/" : "login"
+                  }
                 className="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 transition duration-300"
               >
                 Home

@@ -4,6 +4,7 @@ import errorNotification, {
   successNotification,
 } from "../../utils/notification";
 import { useNavigate } from "react-router-dom";
+
 function EnterCode() {
   const validCode = useSelector((state) => state.forgotPassword.code);
   const navigate = useNavigate();

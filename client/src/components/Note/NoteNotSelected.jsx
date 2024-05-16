@@ -1,12 +1,12 @@
 import { useDispatch } from "react-redux";
 import noNotesImage from "../../assets/no-notes.png";
 import Button from "../Form/Button";
-import { noteActions } from "../../store/userStore";
+import { notesActions } from "../../store/notesSlice";
 
 function NoteNotSelected() {
   const dispatch = useDispatch();
   function newNote() {
-    dispatch(noteActions.setNoteId(null));
+    dispatch(notesActions.setNoteId(null));
   }
 
   return (

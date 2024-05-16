@@ -6,7 +6,7 @@ import errorNotification, {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { forgotPasswordActions } from "../../store/userStore";
+import { forgotPasswordActions } from "../../store/forgotPasswordSlice";
 
 function ForgotPassword() {
   const navigate = useNavigate();

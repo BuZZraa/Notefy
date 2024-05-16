@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import errorNotification from "../../utils/notification";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 function UserProfile() {
   const userId = useSelector((state) => state.user.userId);
@@ -38,7 +39,7 @@ function UserProfile() {
           setUserData(response.data.user);
         }
       } catch (error) {
-        errorNotification(error);
+        errorNotification(error.message || "An error occurred!");
       }
     };
 
@@ -47,6 +48,7 @@ function UserProfile() {
 
   return (
     <div className="bg-gray-100 rounded-lg shadow-md px-6 py-8 max-w-md mx-auto border border-stone-200">
+      <ToastContainer position="bottom-right" closeOnClick />
       <h2 className="text-2xl font-semibold text-center mb-6">User Profile</h2>
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col">
