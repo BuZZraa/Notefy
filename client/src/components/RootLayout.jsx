@@ -4,13 +4,13 @@ import Footer from "./Footer";
 
 function RootLayout() {
   return (
-    <>
-      <div className="flex flex-col h-screen justify-between">
-        <Header />
+    <div className="flex flex-col min-h-screen">
+      <Header className="mb-8" />
+      <div className="flex-grow mb-8">
         <Outlet />
-        <Footer />
       </div>
-    </>
+      <Footer className="mt-8" />
+    </div>
   );
 }
 

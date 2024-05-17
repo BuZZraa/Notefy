@@ -47,7 +47,7 @@ function UserProfile() {
   }, []);
 
   return (
-    <div className="bg-gray-100 rounded-lg shadow-md px-6 py-8 max-w-md mx-auto border border-stone-200">
+    <div className="bg-gray-100 rounded-lg shadow-md px-6 py-8 max-w-md mt-32 mx-auto border border-stone-200">
       <ToastContainer position="bottom-right" closeOnClick />
       <h2 className="text-2xl font-semibold text-center mb-6">User Profile</h2>
       <div className="grid grid-cols-2 gap-4">

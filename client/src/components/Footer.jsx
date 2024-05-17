@@ -1,12 +1,14 @@
+import logo from "../assets/footerLogo.png"
+
 function Footer() {
   return (
     <footer className="bg-gradient-to-r from-blue-400 to-purple-500 border-gray-200">
       <div className="container flex flex-col items-center justify-between p-6 mx-auto space-y-4 sm:space-y-0 sm:flex-row">
-        <img
-          className="w-auto h-7"
-          src="https://merakiui.com/images/full-logo.svg"
-          alt=""
-        />
+        <a href="#"><img
+          className="w-auto h-6"
+          src={logo}
+          alt="Notefy logo"
+        /></a>
 
         <p className="text-sm text-stone-100 font-semibold">
           © Notefy 2024. All Rights Reserved.
@@ -14,7 +16,8 @@ function Footer() {
 
         <div className="flex -mx-2">
           <a
-            href="#"
+            href="https://www.instagram.com/_buzzra_"
+            target="_blank"
             className="mx-2 text-stone-100 transition-colors duration-30 hover:text-indigo-300"
             aria-label="Instagram"
           >

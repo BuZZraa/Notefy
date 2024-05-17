@@ -232,6 +232,30 @@ app.post("/getUsers", authenticateToken, async (req, res) => {
   }
 })
 
+app.post("/getNotes", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const role = req.body.role;
+
+    if(userId === "") return res.status(401).json({message: "User id required to get the notes."});
+
+    if(role !== "admin") return res.status(403).json({message: "Admin privileges required to view notes."});
+
+    const notes = await NotesModel.find({});
+    return res.status(200).json({ message: "Success", notes});
+
+  }
+
+  catch(error) {
+    console.error("Login error:", error);
+    return res
+      .status(500)
+      .json({
+        message: "An unexpected error occurred. Please try again later.",
+      });
+  }
+})
+
 
 
 app.put("/updateProfile", authenticateToken, async(req, res) => {
@@ -312,7 +336,7 @@ app.post("/addnote", authenticateToken, async (req, res) => {
 
 
 
-app.post("/getnotes", authenticateToken, async(req, res) => {
+app.post("/getUserNotes", authenticateToken, async(req, res) => {
   try {
     const userId = req.body.userId;
     if(userId === "") return res.status(401).json({message: "User id required to get the notes."});
@@ -391,7 +415,6 @@ app.post("/deleteUser", authenticateToken, async(req, res) => {
 
 app.put("/updateNote",  authenticateToken, async(req, res) => {
   const {title, description, addedDate, dueDate, noteId, userId} = req.body
-
   try {
     if(noteId === "") return res.status(401).json({message: "Note id required to update the note."});
     
@@ -438,12 +461,12 @@ app.post("/searchNote", authenticateToken, async (req, res) => {
 
     let notes;
 
-    if (sortField) {
-      if (title) notes = await NotesModel.find(query).sort({ [sortField]: 1 });
-      else notes = await NotesModel.find({ userId: userId }).sort({ [sortField]: 1 });     
-    } else {
-      notes = await NotesModel.find(query);
-    }
+      if (sortField) {
+        if (title) notes = await NotesModel.find(query).sort({ [sortField]: 1 });
+        else notes = await NotesModel.find({ userId: userId }).sort({ [sortField]: 1 });     
+      } else {
+        notes = await NotesModel.find(query);
+      }
 
     return res.status(200).json({ message: "Success", notes: notes });
   } catch (error) {
@@ -471,7 +494,7 @@ app.post("/dashboardData", authenticateToken, async (req, res) => {
 
 
 
-app.put("/editUser", authenticateToken, async (req, res) => {
+app.put("/adminEditUser", authenticateToken, async (req, res) => {
   try {
     const { userId, user, firstName, lastName, email, 
       role, dateOfBirth, gender, address, phoneNumber} = req.body;

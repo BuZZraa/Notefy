@@ -66,7 +66,7 @@ function AdminEditUser() {
     <main className="h-screen my-8 flex gap-8">
       <ToastContainer position="bottom-right" closeOnClick />
       <AdminSidebar />
-      <div className="bg-gray-100 rounded-lg shadow-md px-8 py-6 max-w-md mx-auto border border-stone-200">
+      <div className="bg-gray-100 rounded-lg shadow-md px-8 py-6 max-w-md border border-stone-200">
         <h2 className="text-2xl font-semibold text-center mb-6">Edit User Profile</h2>
         <form onSubmit={updateProfile}>
           <div className="grid grid-cols-2 gap-4">

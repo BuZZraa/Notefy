@@ -12,6 +12,7 @@ function SearchNote() {
   const userId = useSelector((state) => state.user.userId);
   const noteId = useSelector((state) => state.note.noteId);
   const accessToken = useSelector((state) => state.user.token);
+  const role = useSelector((state => state.user.role))
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchResults, setSearchResults] = useState([]);

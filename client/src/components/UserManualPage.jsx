@@ -2,8 +2,8 @@ import React from "react";
 
 function UserManualPage() {
   return (
-    <>
-      <div className="mt-8 p-5 border-2 border-yellow-800 rounded-xl bg-yellow-100 text-yellow-800 shadow-xl mx-auto">
+    <div className="flex items-center justify-center mt-8">
+      <div className="p-5 border-2 border-yellow-800 rounded-xl bg-yellow-100 text-yellow-800 shadow-xl inline-block">
         <div className="pb-5">
           <h1 className="text-3xl font-bold mb-4">
             1. Commands for Adding and Editing Notes
@@ -13,24 +13,19 @@ function UserManualPage() {
           </p>
           <ul className="leading-8 text-sm">
             <li>
-              <strong>Add Title:</strong> "add title" followed by the title text
-              to add a title to your note.
+              <strong>Add Title:</strong> "add title" followed by the title text to add a title to your note.
             </li>
             <li>
-              <strong>Remove Title:</strong> "remove title" to clear the title
-              field.
+              <strong>Remove Title:</strong> "remove title" to clear the title field.
             </li>
             <li>
-              <strong>Add Description:</strong> "add description" followed by
-              the description text to add a description to your note.
+              <strong>Add Description:</strong> "add description" followed by the description text to add a description to your note.
             </li>
             <li>
-              <strong>Remove Description:</strong> "remove description" to clear
-              the description field.
+              <strong>Remove Description:</strong> "remove description" to clear the description field.
             </li>
             <li>
-              <strong>Add Date:</strong> "add date" followed by the date in the
-              format "YYYYMMDD" to add a due date to your note.
+              <strong>Add Date:</strong> "add date" followed by the date in the format "YYYYMMDD" to add a due date to your note.
             </li>
             <li>
               <strong>Cancel:</strong> "cancel" to cancel creating a new note.
@@ -50,16 +45,13 @@ function UserManualPage() {
           </p>
           <ul className="leading-8 text-sm">
             <li>
-              <strong>Title:</strong> "title" to hear the title of the selected
-              note.
+              <strong>Title:</strong> "title" to hear the title of the selected note.
             </li>
             <li>
-              <strong>Description:</strong> "description" to hear the
-              description of the selected note.
+              <strong>Description:</strong> "description" to hear the description of the selected note.
             </li>
             <li>
-              <strong>Date:</strong> "date" to hear the due date of the selected
-              note.
+              <strong>Date:</strong> "date" to hear the due date of the selected note.
             </li>
             <li>
               <strong>Edit:</strong> "edit" to edit the selected note.
@@ -70,7 +62,7 @@ function UserManualPage() {
           </ul>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

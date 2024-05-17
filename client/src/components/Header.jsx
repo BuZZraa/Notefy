@@ -5,6 +5,8 @@ import { forgotPasswordActions } from "../store/forgotPasswordSlice";
 import { notesActions } from "../store/notesSlice";
 import axios from "axios";
 import errorNotification from "../utils/notification";
+import logo from "../assets/logo.png"
+
 
 function Header() {
   const userId = useSelector((state) => state.user.userId);
@@ -53,7 +55,7 @@ function Header() {
                 About
               </NavLink>
 
-              {userId && (
+              {userId && role === "user" && (
                 <>
                   <NavLink
                     to="searchNote"
@@ -74,9 +76,9 @@ function Header() {
             <div className="lg:absolute lg:-translate-x-1/2 lg:inset-y-5 lg:left-1/2">
               <div className="flex-shrink-0">
                 <img
-                  className="w-auto h-8 lg:h-10"
-                  src="https://merakiui.com/images/full-logo.svg"
-                  alt=""
+                  className="w-auto h-12"
+                  src={logo}
+                  alt="Notefy logo"
                 />
               </div>
             </div>

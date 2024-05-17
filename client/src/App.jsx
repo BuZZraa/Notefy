@@ -20,6 +20,8 @@ import UserManualPage from "./components/UserManualPage.jsx";
 import AdminDashboard from "./components/Admin/AdminDashboard.jsx";
 import AdminViewUsers from "./components/Admin/AdminViewUsers.jsx";
 import AdminEditUser from "./components/Admin/AdminEditUser.jsx";
+import AdminViewNotes from "./components/Admin/AdminViewNotes.jsx";
+import AdminEditNote from "./components/Admin/AdminEditNote.jsx";
 
 function App() {
 
@@ -44,7 +46,9 @@ function App() {
         { path: "resetPassword", element: <SecureForgotPassword element={<ResetPassword />} /> },
         { path: "adminDashboard", element: <SecureRoute element= {<AdminDashboard />} /> },
         { path: "users", element: <SecureRoute element= {<AdminViewUsers />} /> },
-        { path: "editUser", element: <SecureRoute element= {<AdminEditUser />} /> }
+        { path: "editUser", element: <SecureRoute element= {<AdminEditUser />} /> },
+        { path: "notes", element: <SecureRoute element= {<AdminViewNotes/>} /> },
+        { path: "adminEditNote", element: <SecureRoute element= {<AdminEditNote/>} /> },
       ],
     }
   ]);

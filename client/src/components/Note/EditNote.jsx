@@ -130,7 +130,7 @@ function EditNote() {
     <>
       <ToastContainer newestOnTop position="bottom-right" />
       <form onSubmit={editNote}>
-        <div className="mx-auto w-[35rem] bg-yellow-100 border-2 border-yellow-800 p-8 rounded-md mb-16">
+        <div className="mx-auto w-[35rem] bg-yellow-100 border-2 border-yellow-800 p-8 rounded-md mt-32">
           <h1 className="text-4xl font-bold text-center">Edit Note</h1>
           <div>
             <NoteInput

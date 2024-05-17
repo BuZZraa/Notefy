@@ -58,7 +58,7 @@ function EditProfile() {
     setFormData({ ...formData, [name]: value });
   }
   return (
-    <div className="bg-gray-100 rounded-lg shadow-md px-8 py-6 max-w-md mx-auto border border-stone-200">
+    <div className="bg-gray-100 rounded-lg shadow-md px-8 py-6 mt-32 max-w-md mx-auto border border-stone-200">
       <ToastContainer newestOnTop position="bottom-right" />
       <h2 className="text-2xl font-semibold text-center mb-6">Edit Profile</h2>
       <form onSubmit={updateProfile}>

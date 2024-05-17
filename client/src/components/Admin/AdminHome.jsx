@@ -39,7 +39,7 @@ function AdminHome() {
 
   return (
     <div className="container mx-auto mt-8">
-      <h1 className="text-3xl font-bold text-center mb-8">Dashboard</h1>
+      <h1 className="text-4xl font-bold text-center mb-8">Dashboard</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <div className="bg-gray-50 border border-indigo-200 rounded-md shadow p-6">
           <h2 className="text-lg font-semibold mb-4">Total Users</h2>

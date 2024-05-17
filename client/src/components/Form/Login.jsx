@@ -46,9 +46,9 @@ function Login() {
   }
 
   return (
-    <div className="flex items-center justify-center my-8 space-x-20">
+    <div className="flex items-center justify-center mt-32">
       <ToastContainer newestOnTop position="bottom-right" closeOnClick />
-      <div className="w-1/4 h-full p-4">
+      <div className="w-1/4 p-4">
         <img
           src={noteVector}
           alt="Note Vector"
