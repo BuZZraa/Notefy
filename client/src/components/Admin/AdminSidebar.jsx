@@ -49,7 +49,7 @@ function AdminSidebar() {
           </svg>
           <span>Users</span>
         </NavLink>
-        <NavLink className="flex items-center space-x-2 p-2 bg-white text-gray-700 hover:bg-indigo-800 hover:text-white rounded-md">
+        <NavLink to="/notes" className="flex items-center space-x-2 p-2 bg-white text-gray-700 hover:bg-indigo-800 hover:text-white rounded-md">
         <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 448 512"

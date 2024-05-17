@@ -37,7 +37,7 @@ function NotesSidebar() {
           return;
         }
 
-        const response = await axios.post("http://localhost:3000/getnotes", {userId}, {
+        const response = await axios.post("http://localhost:3000/getUserNotes", {userId}, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
