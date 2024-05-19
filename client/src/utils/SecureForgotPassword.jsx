@@ -2,9 +2,9 @@ import { Navigate} from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export default function SecureForgotPassword({ element }) {
-    const code = useSelector(state => state.forgotPassword.code);
+    const email = useSelector(state => state.forgotPassword.email);
 
-    if (!code) {
+    if (!email) {
       return <Navigate to="/forgotPassword" />;
     }
   

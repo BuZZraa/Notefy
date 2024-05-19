@@ -29,8 +29,8 @@ function ResetPassword() {
         })
         .then((response) => {
           if (response.data.message === "Success") {
-            dispatch(forgotPasswordActions.clearVerificationInfo());
             successNotification("Password has been reset successfully.");
+            dispatch(forgotPasswordActions.clearVerificationInfo());
             setTimeout(() => {
               navigate("/login");
             }, 1000);
@@ -51,7 +51,7 @@ function ResetPassword() {
   }
 
   return (
-    <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
+    <div className="max-w-lg mx-auto mt-32 bg-white p-8 rounded-xl shadow shadow-slate-300">
       <ToastContainer newestOnTop closeOnClick position="bottom-right" />
       <h1 className="text-4xl font-medium pb-3">Reset password</h1>
 

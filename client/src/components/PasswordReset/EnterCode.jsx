@@ -1,30 +1,42 @@
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
-import errorNotification, {
-  successNotification,
-} from "../../utils/notification";
+import errorNotification, { successNotification } from "../../utils/notification";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function EnterCode() {
-  const validCode = useSelector((state) => state.forgotPassword.code);
+  const email = useSelector((state) => state.forgotPassword.email);
   const navigate = useNavigate();
 
   function verifyCode(event) {
     event.preventDefault();
     const code = event.target.code.value;
 
-    if (code === validCode) {
-      successNotification("Successfully verified.");
-      setTimeout(() => {
-        navigate("/resetPassword");
-      }, 1000);
-    } else {
-      errorNotification("Enter a valid code.");
-    }
-  }
+    axios
+    .post("http://localhost:3000/verifyCode", {code, email})
+    .then((response) => {
+      if (response.data.message === "Success") {
+        successNotification("Code verified successfully.");
+        setTimeout(() => {
+          navigate("/resetPassword"); 
+        }, 1000);       
+      }   
+    })
+
+    .catch((error) => {
+      console.log(error);
+      if (error.response) {
+        let errorMessage = error.response.data.message;
+        errorNotification(errorMessage);
+      } else {
+        errorNotification(error.message);
+      }
+    });
+    } 
+
 
   return (
-    <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
+    <div className="max-w-lg mx-auto mt-32 bg-white p-8 rounded-xl shadow shadow-slate-300">
       <ToastContainer newestOnTop closeOnClick position="bottom-right" />
       <h1 className="text-4xl font-medium pb-3">Verify code</h1>
       <p className="text-slate-500">Enter the code received in your mail.</p>
@@ -52,5 +64,6 @@ function EnterCode() {
     </div>
   );
 }
+
 
 export default EnterCode;
