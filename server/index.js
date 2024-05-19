@@ -162,12 +162,20 @@ app.post("/forgotPassword", async(req, res) => {
 
 
 app.post("/verifyCode", async(req, res) => {
-  const code = req.body.code;
+  const {email, code} = req.body;
   try {
 
-    if(!code) return res.status(403).json({message: "Enter a valid email."});
+    if(!code) return res.status(400).json({message: "Enter a code to be verified."});
 
-    if(code === verificationCode) return res.status(200).json({ message: "Success", code: verificationCode});
+    if(!email) return res.status(403).json({message: "Email required to verify user."});
+
+    if(code.length !== 6) return res.status(404).json({message: "Enter a 6-digit code to be verified."});
+
+    if(code !== verificationCode) return res.status(400).json({ message: "Invalid code entered!"});
+
+    const existingUser = await UsersModel.findOne({ email: email });
+    if(!existingUser) return res.status(401).json({ message: "Email not found." });
+    return res.status(200).json({ message: 'Success' });
   }
 
   catch(error) {
@@ -196,6 +204,7 @@ app.post("/resetPassword", async(req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await UsersModel.updateOne({email: email}, {password: hashedPassword})
+    verificationCode = ""
     return res.status(200).json({message: "Success"});
   }
 

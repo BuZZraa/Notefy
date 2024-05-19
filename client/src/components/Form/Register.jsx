@@ -21,7 +21,6 @@ function Register() {
       axios
         .post("http://localhost:3000/register", formData)
         .then((response) => {
-          console.log(response);
           if (response.status === 409) {
             errorNotification(response.data.messsage);
           }
