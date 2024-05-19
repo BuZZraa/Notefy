@@ -10,7 +10,10 @@ function AdminSidebar() {
   const accessToken = useSelector((state) => state.user.token);
   const sessionExpired = useSelector((state) => state.user.sessionExpired);
   const dispatch = useDispatch();
-
+  let classes =
+    "flex items-center space-x-2 p-2 bg-white text-gray-700 hover:bg-indigo-800 hover:text-white rounded-md ";
+  let activeClasses =
+    "flex items-center space-x-2 p-2 bg-indigo-500 text-white hover:bg-indigo-800 hover:text-white rounded-md ";
   useEffect(() => {
     const decodedToken = jwtDecode(accessToken);
     const currentTime = Date.now() / 1000;
@@ -27,7 +30,10 @@ function AdminSidebar() {
       </h1>
 
       <nav className="flex flex-col space-y-4">
-        <NavLink to="/adminDashboard" className="flex items-center space-x-2 p-2 bg-white text-gray-700 hover:bg-indigo-800 hover:text-white rounded-md">
+        <NavLink
+          to="/adminDashboard"
+          className={({ isActive }) => (isActive ? activeClasses : classes)}
+        >
           <svg
             className="w-6 h-6"
             fill="currentColor"
@@ -38,8 +44,11 @@ function AdminSidebar() {
           </svg>
           <span>Home</span>
         </NavLink>
-        <NavLink to="/users" className="flex items-center space-x-2 p-2 bg-white text-gray-700 hover:bg-indigo-800 hover:text-white rounded-md">
-        <svg
+        <NavLink
+          to="/users"
+          className={({ isActive }) => (isActive ? activeClasses : classes)}
+        >
+          <svg
             className="w-6 h-6"
             fill="currentColor"
             viewBox="0 0 24 24"
@@ -49,14 +58,17 @@ function AdminSidebar() {
           </svg>
           <span>Users</span>
         </NavLink>
-        <NavLink to="/notes" className="flex items-center space-x-2 p-2 bg-white text-gray-700 hover:bg-indigo-800 hover:text-white rounded-md">
-        <svg
+        <NavLink
+          to="/notes"
+          className={({ isActive }) => (isActive ? activeClasses : classes)}
+        >
+          <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 448 512"
             className="w-5 h-5"
             fill="currentColor"
           >
-            <path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H288V352c0-17.7 14.3-32 32-32h80V96c0-8.8-7.2-16-16-16H64zM288 480H64c-35.3 0-64-28.7-64-64V96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V320v5.5c0 17-6.7 33.3-18.7 45.3l-90.5 90.5c-12 12-28.3 18.7-45.3 18.7H288z"/>
+            <path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H288V352c0-17.7 14.3-32 32-32h80V96c0-8.8-7.2-16-16-16H64zM288 480H64c-35.3 0-64-28.7-64-64V96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V320v5.5c0 17-6.7 33.3-18.7 45.3l-90.5 90.5c-12 12-28.3 18.7-45.3 18.7H288z" />
           </svg>
           <span>Notes</span>
         </NavLink>

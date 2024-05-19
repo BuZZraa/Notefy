@@ -11,8 +11,10 @@ import 'dotenv/config';
 import crypto from "crypto";
 import sendMail from "./Mailer.js";
 import jwt from "jsonwebtoken";
+
 const app = express();
 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,12}$/;
+let verificationCode;
 
 app.use(express.json());
 app.use(cors());
@@ -140,12 +142,32 @@ app.post("/forgotPassword", async(req, res) => {
     if(!existingUser) return res.status(401).json({ message: "Email not found." });
     
 
-    const verificationCode = crypto.randomInt(
+    verificationCode = crypto.randomInt(
       100000, 999999
     ).toString()
     
     sendMail(verificationCode, email);
     return res.status(200).json({ message: "Success", code: verificationCode});
+  }
+
+  catch(error) {
+    console.error("Error forget password: ", error)
+    return res
+      .status(500)
+      .json({
+        message: "An unexpected error occurred. Please try again later.",
+      });
+  }
+})
+
+
+app.post("/verifyCode", async(req, res) => {
+  const code = req.body.code;
+  try {
+
+    if(!code) return res.status(403).json({message: "Enter a valid email."});
+
+    if(code === verificationCode) return res.status(200).json({ message: "Success", code: verificationCode});
   }
 
   catch(error) {

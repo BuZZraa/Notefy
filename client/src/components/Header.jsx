@@ -13,6 +13,8 @@ function Header() {
   const accessToken = useSelector((state) => state.user.token);
   const role = useSelector((state => state.user.role))
   const dispatch = useDispatch();
+  let classes = "text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-400 transition duration-300";
+  let activeClasses = "bg-indigo-500 transition duration-300 text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-400 transition duration-300"
   function handleLogout() {
     axios
       .post("http://localhost:3000/logout", {}, {
@@ -43,14 +45,14 @@ function Header() {
                 to={
                   role === "admin" ? "adminDashboard" : role === "user" ? "/" : "login"
                   }
-                className="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 transition duration-300"
+                className={({ isActive }) => (isActive ? activeClasses : classes)}
               >
                 Home
               </NavLink>
 
               <NavLink
                 to="aboutus"
-                className="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 transition duration-300"
+                className={({ isActive }) => (isActive ? activeClasses : classes)}
               >
                 About
               </NavLink>
@@ -59,13 +61,13 @@ function Header() {
                 <>
                   <NavLink
                     to="searchNote"
-                    className="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 transition duration-300"
+                    className={({ isActive }) => (isActive ? activeClasses : classes)}
                   >
                     Search
                   </NavLink>
                   <NavLink
                     to="userManual"
-                    className="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 transition duration-300"
+                    className={({ isActive }) => (isActive ? activeClasses : classes)}
                   >               
                     Help
                   </NavLink>
@@ -88,14 +90,14 @@ function Header() {
                 <>
                   <NavLink
                     to="register"
-                    className="text-base font-medium text-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300"
+                    className={({ isActive }) => (isActive ? activeClasses : classes)}
                   >
                     Register
                   </NavLink>
 
                   <NavLink
                     to="login"
-                    className="text-base font-medium text-indigo-500 bg-stone-100 py-2 px-4 rounded-md  hover:bg-indigo-300 hover:text-stone-100"
+                    className={({ isActive }) => (isActive ? activeClasses : "text-base font-medium text-indigo-500 bg-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-stone-100 transition duration-300")}
                   >
                     Log in
                   </NavLink>
@@ -122,7 +124,7 @@ function Header() {
                   <button
                     onClick={handleLogout}
                     type="submit"
-                    className="text-base font-medium text-indigo-500 bg-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-stone-100 transition duration-300"
+                    className={({ isActive }) => (isActive ? activeClasses : "text-base font-medium text-indigo-500 bg-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-stone-100 transition duration-300")}
                   >
                     Logout
                   </button>

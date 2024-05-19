@@ -71,7 +71,7 @@ function AdminViewNotes() {
         <AdminSidebar />
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-4xl font-semibold mb-8 text-center">
-            Notes Management
+            Note Management
           </h1>
           <div className="mb-4">
             <input
