@@ -170,16 +170,17 @@ app.post("/verifyCode", async(req, res) => {
     if(!email) return res.status(403).json({message: "Email required to verify user."});
 
     if(code.length !== 6) return res.status(404).json({message: "Enter a 6-digit code to be verified."});
-
-    if(code !== verificationCode) return res.status(400).json({ message: "Invalid code entered!"});
-
+    
     const existingUser = await UsersModel.findOne({ email: email });
     if(!existingUser) return res.status(401).json({ message: "Email not found." });
+
+    if(code !== verificationCode) return res.status(400).json({ message: "Invalid code entered!"});
+    
     return res.status(200).json({ message: 'Success' });
   }
 
   catch(error) {
-    console.error("Error forget password: ", error)
+    console.error("Error verifying code : ", error)
     return res
       .status(500)
       .json({
