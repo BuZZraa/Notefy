@@ -21,14 +21,13 @@ function ForgotPassword() {
     }
 
     axios
-      .post("http://localhost:3000/forgotPassword", { email: email })
+      .post("http://localhost:3000/forgotPassword", { email })
       .then((response) => {
         if (response.data.message === "Success") {
-          const code = response.data.code;
           successNotification("Code sent to the email successfully!");
           setTimeout(() => {
             dispatch(
-              forgotPasswordActions.setVerificationInfo({ code, email })
+              forgotPasswordActions.setVerificationInfo({ email })
             );
             navigate("/enterCode");
           }, 1000);
@@ -44,8 +43,9 @@ function ForgotPassword() {
         }
       });
   }
+  
   return (
-    <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
+    <div className="max-w-lg mx-auto mt-32 bg-white p-8 rounded-xl shadow shadow-slate-300">
       <ToastContainer newestOnTop closeOnClick position="bottom-right" />
       <h1 className="text-4xl font-medium pb-3">Forgot password?</h1>
       <p className="text-slate-500">Fill up the form to reset the password.</p>

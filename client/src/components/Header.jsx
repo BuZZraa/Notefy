@@ -7,7 +7,6 @@ import axios from "axios";
 import errorNotification from "../utils/notification";
 import logo from "../assets/logo.png"
 
-
 function Header() {
   const userId = useSelector((state) => state.user.userId);
   const accessToken = useSelector((state) => state.user.token);
