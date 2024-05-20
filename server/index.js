@@ -327,7 +327,8 @@ app.put("/changePassword", authenticateToken, async(req, res) => {
     
     if (!(newPassword.length >= 8 && newPassword.length <= 12)) return res.status(400).json({message: "Password must be between 8 and 12 characters."});
     
-    if (!passwordRegex.test(newPassword)) return res.status(400).json({message: "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8 and 12 characters."});
+    if (!passwordRegex.test(newPassword)) return res.status(400).json({message: "Password must contain at least one uppercase letter, one lowercase letter, " +
+    "one digit, one special character, and be between 8 and 12 characters."});
 
     const existingUser = await UsersModel.findOne({_id: userId});
     if(!existingUser) return res.status(401).json({ message: "User not found." });
