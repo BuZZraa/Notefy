@@ -203,7 +203,8 @@ app.post("/resetPassword", async(req, res) => {
     
     if (!(password.length >= 8 && password.length <= 12)) return res.status(400).json({message: "Password must be between 8 and 12 characters."});
 
-    if (!passwordRegex.test(password)) return res.status(400).json({message: "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8 and 12 characters."});
+    if (!passwordRegex.test(password)) return res.status(400).json({message: "Password must contain at least one uppercase letter, one lowercase letter, "  + 
+    "one digit, one special character, and be between 8 and 12 characters."});
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await UsersModel.updateOne({email: email}, {password: hashedPassword})
