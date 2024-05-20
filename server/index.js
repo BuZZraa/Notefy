@@ -52,7 +52,8 @@ app.post("/register", async (req, res) => {
 
     if (!(password.length >= 8 && password.length <= 12)) return res.status(400).json({message: "Password must be between 8 and 12 characters."});
 
-    if (!passwordRegex.test(password)) return res.status(400).json({message: "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8 and 12 characters."});
+    if (!passwordRegex.test(password)) return res.status(400).json({message: "Password must contain at least one uppercase letter, one lowercase letter," 
+    + "one digit, one special character, and be between 8 and 12 characters."});
     
     if(phoneNumber.length !== 10) return res.status(400).json({message: "Phone number must be 10-digit."})
 
