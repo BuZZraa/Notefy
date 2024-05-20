@@ -115,14 +115,17 @@ app.post("/login", async (req, res) => {
 
 app.post("/logout", async (req, res) => {
   try {
+    const userId = req.body.userId;
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
+
+    if(!userId) return res.status(401).json({message: "User id required to logout."});
 
     if (!token) {
       return res.status(401).json({ message: "No token provided." });
     }
 
-    const removeToken = await ValidTokenModel.deleteOne({ token: token });
+    const removeToken = await ValidTokenModel.deleteOne({ token: token, userId: userId });
     if(removeToken.deletedCount === 1) return res.status(200).json({ message: 'Success' });
 
     else return res.status(500).json({ message: 'Logout Failed.' });
@@ -149,7 +152,7 @@ app.post("/forgotPassword", async(req, res) => {
     ).toString()
     
     sendMail(verificationCode, email);
-    return res.status(200).json({ message: "Success", code: verificationCode});
+    return res.status(200).json({ message: "Success"});
   }
 
   catch(error) {
@@ -198,6 +201,8 @@ app.post("/resetPassword", async(req, res) => {
   try {
     const existingUser = await UsersModel.findOne({ email: email });
     if(!existingUser) return res.status(401).json({ message: "Email not found." });
+
+    if(!verificationCode) return res.status(400).json({message: "Code verification requried to reset password."})
     
     if(password !== reenterPassword) return res.status(400).json({ message: "Passwords don't match." });
     
@@ -224,7 +229,7 @@ app.post("/getUser", authenticateToken, async (req, res) => {
   try {
     const userId = req.body.userId;
 
-    if(userId === "") return res.status(401).json({message: "User id required to get the notes."});
+    if(!userId) return res.status(401).json({message: "User id required to get the notes."});
 
     const user = await UsersModel.findOne({ _id: userId });
     return res.status(200).json({ message: "Success", user});
@@ -356,14 +361,14 @@ app.put("/changePassword", authenticateToken, async(req, res) => {
 app.post("/addnote", authenticateToken, async (req, res) => {
   const userId = req.body.userId;
   try {
-    if(userId === "") return res.status(401).json({message: "User id required to get the notes."});
+    if(!userId) return res.status(401).json({message: "User id required to get the notes."});
     
     const newNote = await NotesModel.create({
       userId: userId, 
       notes: req.body, 
     });
 
-    return res.status(201).json(newNote);
+    return res.status(200).json({message: "Success"});
   } catch (error) {
     console.error("Error adding note:", error);
     return res.status(500).json({ message: "An unexpected error occurred. Please try again later." });
@@ -375,7 +380,7 @@ app.post("/addnote", authenticateToken, async (req, res) => {
 app.post("/getUserNotes", authenticateToken, async(req, res) => {
   try {
     const userId = req.body.userId;
-    if(userId === "") return res.status(401).json({message: "User id required to get the notes."});
+    if(!userId) return res.status(401).json({message: "User id required to get the notes."});
 
     const notes = await NotesModel.find({ userId: userId });
     return res.status(200).json({ message: "Success", notes: notes});
@@ -394,9 +399,9 @@ app.post("/getCurrentNote", authenticateToken, async(req, res) => {
   try {
     const { noteId, userId } = req.body
 
-    if(noteId === "") return res.status(401).json({message: "Note id required to get the note."});
+    if(!noteId) return res.status(401).json({message: "Note id required to get the note."});
     
-    if(userId === "") return res.status(401).json({message: "User id required to get the notes."});
+    if(!userId) return res.status(401).json({message: "User id required to get the notes."});
     
     const notes = await NotesModel.findOne({ _id: noteId, userId: userId });
     return res.status(200).json({ message: "Success", notes: notes});
@@ -410,13 +415,13 @@ app.post("/getCurrentNote", authenticateToken, async(req, res) => {
 
 
 
-app.post("/deleteNote", authenticateToken, async(req, res) => {
+app.delete("/deleteNote", authenticateToken, async(req, res) => {
   const { noteId, userId } = req.body
 
   try {
-    if(noteId === "") return res.status(401).json({message: "Note id required to delete the note."});
+    if(!noteId) return res.status(401).json({message: "Note id required to delete the note."});
     
-    if(userId === "") return res.status(401).json({message: "User id required to delete the notes."});
+    if(!userId) return res.status(401).json({message: "User id required to delete the notes."});
     
     await NotesModel.deleteOne({ _id: noteId, userId: userId });
     return res.status(200).json({ message: "Successfully deleted note."});
@@ -430,7 +435,7 @@ app.post("/deleteNote", authenticateToken, async(req, res) => {
 
 
 
-app.post("/deleteUser", authenticateToken, async(req, res) => {
+app.delete("/deleteUser", authenticateToken, async(req, res) => {
   const {userId, role, user} = req.body
 
   try {

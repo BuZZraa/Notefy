@@ -55,10 +55,10 @@ function AdminViewUsers() {
         return;
       }
 
-      await axios.post(
-        "http://localhost:3000/deleteUser",
-        { userId, role, user },
+      await axios.delete(
+        "http://localhost:3000/deleteUser",      
         {
+          data: { userId, role, user },
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

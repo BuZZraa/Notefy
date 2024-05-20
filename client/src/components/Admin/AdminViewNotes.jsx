@@ -45,10 +45,10 @@ function AdminViewNotes() {
 
   const deleteNote = async (noteId, noteUserId) => {
     try {
-      await axios.post(
-        "http://localhost:3000/deleteNote",
-        { userId: noteUserId, noteId },
+      await axios.delete(
+        "http://localhost:3000/deleteNote",       
         {
+          data: { userId: noteUserId, noteId },
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

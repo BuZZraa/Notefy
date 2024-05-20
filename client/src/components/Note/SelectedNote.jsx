@@ -60,10 +60,10 @@ function SelectedProject() {
 
   function deleteNote() {
     try {
-      axios.post(
+      axios.delete(
         "http://localhost:3000/deleteNote",
-        { noteId, userId },
         {
+          data: { noteId, userId },
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
