@@ -112,7 +112,7 @@ app.post("/login", async (req, res) => {
 
 
 
-app.post('/logout', async (req, res) => {
+app.post("/logout", async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
