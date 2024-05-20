@@ -16,8 +16,7 @@ function Register() {
     const reenterPassword = fd.get("reenterPassword");
 
     if (password === reenterPassword) {
-      const formData = Object.fromEntries(fd.entries());
-      formData.role="user"
+      const formData = Object.fromEntries(fd.entries());      
       axios
         .post("http://localhost:3000/register", formData)
         .then((response) => {

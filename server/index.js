@@ -41,10 +41,10 @@ async function authenticateToken (req, res, next) {
 
 app.post("/register", async (req, res) => {
   try {
-    const { firstName, lastName, password, reenterPassword, email, dateOfBirth, gender, address, phoneNumber, role } = req.body;
+    const { firstName, lastName, password, reenterPassword, email, dateOfBirth, gender, address, phoneNumber} = req.body;
 
     if (!firstName || !lastName || !password || !reenterPassword || !email 
-    || !dateOfBirth || !gender || !address || !phoneNumber || !role)  return res.status(400).json({message: "Enter values for all fields."});
+    || !dateOfBirth || !gender || !address || !phoneNumber)  return res.status(400).json({message: "Enter values for all fields."});
 
     if(!validator.validate(email)) return res.status(400).json({message: "Enter a valid email."});
     
@@ -63,7 +63,8 @@ app.post("/register", async (req, res) => {
 
     await UsersModel.create({
       ...req.body,
-      password: hashedPassword
+      password: hashedPassword,
+      role: "user"
     });
 
     return res.status(200).json({message: "User registered successfully."});
