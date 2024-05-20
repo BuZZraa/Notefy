@@ -33,7 +33,7 @@ function AdminEditUser() {
     formData.role = role;
 
     axios
-      .put("http://localhost:3000/editUser", formData, {
+      .put("http://localhost:3000/adminEditUser", formData, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

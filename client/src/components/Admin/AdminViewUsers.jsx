@@ -44,11 +44,20 @@ function AdminViewUsers() {
     fetchData();
   }, [userId, role, accessToken]);
 
-  const deleteId = async (user) => {
+  async function deleteUser(user) {
     try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this user?\n\n" +
+        "Note: Deleting this user will permanently remove all associated user data, including notes data and token data. This action cannot be undone. Please confirm if you wish to proceed."
+      );
+  
+      if (!confirmDelete) {
+        return;
+      }
+
       await axios.post(
         "http://localhost:3000/deleteUser",
-        { userId: user, role },
+        { userId, role, user },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -118,7 +127,7 @@ function AdminViewUsers() {
                       </button>
                       <button
                         className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                        onClick={() => deleteId(user._id)}
+                        onClick={() => deleteUser(user._id)}
                       >
                         Delete
                       </button>

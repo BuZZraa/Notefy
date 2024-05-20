@@ -5,6 +5,7 @@ import errorNotification from "../../utils/notification.js";
 
 function AdminHome() {
   const userId = useSelector((state) => state.user.userId);
+  const role = useSelector((state) => state.user.role)
   const accessToken = useSelector((state) => state.user.token);
   const [totalCount, setTotalUsers] = useState(0);
 
@@ -18,7 +19,7 @@ function AdminHome() {
 
         const response = await axios.post(
           "http://localhost:3000/dashboardData",
-          { userId },
+          { userId, role },
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

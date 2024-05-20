@@ -428,14 +428,22 @@ app.post("/deleteNote", authenticateToken, async(req, res) => {
 
 
 app.post("/deleteUser", authenticateToken, async(req, res) => {
-  const userId = req.body.userId
+  const {userId, role, user} = req.body
 
   try {
+    if(!userId) return res.status(401).json({message: "Admin id required to delete the user."});
     
-    if(userId === "") return res.status(401).json({message: "User id required to delete the notes."});
+    if(!user) return res.status(400).json({message: "User id required to delete the user."})
+
+    if(role !== "admin") return res.status(403).json({message: "Unauthorized! Admin priviliges required to delete user"});
     
-    await UsersModel.deleteOne({ _id: userId });
-    return res.status(200).json({ message: "Successfully deleted note."});
+    const isAdmin = await UsersModel.findOne({ _id: userId, role: role });
+    if(!isAdmin) return res.status(403).json({ message: "Unauthorized! Admin can only delete user." });
+    
+    await NotesModel.deleteMany({ userId: user });
+    await ValidTokenModel.deleteMany({userId: user});
+    await UsersModel.deleteOne({ _id: user });
+    return res.status(200).json({ message: "Successfully deleted user"});
   }
 
   catch(error) {
@@ -456,7 +464,7 @@ app.put("/updateNote",  authenticateToken, async(req, res) => {
     if(title === "" || description === "" || addedDate === "" || dueDate === "" || noteId === "") return res.status(400).json({message: "Enter value for all input fields."});
 
     await NotesModel.updateOne(
-      {_id: noteId},
+      {_id: noteId, userId: userId},
       {notes:{
         addedDate,
         title,
@@ -512,6 +520,14 @@ app.post("/searchNote", authenticateToken, async (req, res) => {
 
 app.post("/dashboardData", authenticateToken, async (req, res) => {
   try {
+    const { userId, role} = req.body
+    if(userId === "") return res.status(401).json({message: "Admin id required to access the dashboard."});
+
+    if(role !== "admin") return res.status(403).json({message: "Admin privileges required to access the dashboard."});
+
+    const isAdmin = await UsersModel.findOne({ _id: userId, role: role });
+    if(!isAdmin) return res.status(403).json({ message: "Unauthorized! Admin can only view dashaboard." });
+
     const countUsers = await UsersModel.countDocuments({});
     const countNotes = await NotesModel.countDocuments({});
     const countTokens = await ValidTokenModel.countDocuments({});
@@ -532,16 +548,19 @@ app.put("/adminEditUser", authenticateToken, async (req, res) => {
     const { userId, user, firstName, lastName, email, 
       role, dateOfBirth, gender, address, phoneNumber} = req.body;
 
-    if(userId === "") return res.status(401).json({message: "User id required to update the notes."});
+    if(userId === "") return res.status(401).json({message: "Admin id required to update the user."});
     
-    if(user === "") return res.status(401).json({message: "User required to update the notes."});
+    if(user === "") return res.status(401).json({message: "User id required to update the user."});
 
-    if(role !== "admin") return res.status(403).json({message: "Admin privileges required to view users."});
+    if(role !== "admin") return res.status(403).json({message: "Admin privileges required to update user."});
 
     if (!firstName || !lastName || !email || !dateOfBirth || !gender || !address || !phoneNumber)  return res.status(400).json({message: "Enter values for all fields."});
     
     if(phoneNumber.length !== 10) return res.status(400).json({message: "Phone number must be 10-digit."})
     
+    const isAdmin = await UsersModel.findOne({ _id: userId, role: role });
+    if(!isAdmin) return res.status(403).json({ message: "Unauthorized! Admin can only update user." });
+
     await UsersModel.updateOne({_id: user}, {
       ...req.body,
       role: "user"

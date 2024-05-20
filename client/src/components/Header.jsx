@@ -123,7 +123,7 @@ function Header() {
                   <button
                     onClick={handleLogout}
                     type="submit"
-                    className={({ isActive }) => (isActive ? activeClasses : "text-base font-medium text-indigo-500 bg-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-stone-100 transition duration-300")}
+                    className="text-base font-medium text-indigo-500 bg-stone-100 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-stone-100 transition duration-300"
                   >
                     Logout
                   </button>
