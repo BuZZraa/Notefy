@@ -43,9 +43,10 @@ function EnterCode() {
 
       <form className="my-10" onSubmit={verifyCode}>
         <div className="flex flex-col space-y-5">
-          <label htmlFor="email">
+          <label htmlFor="code">
             <p className="font-medium text-slate-700 pb-2">Code</p>
             <input
+              id="code"
               name="code"
               type="number"
               className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"

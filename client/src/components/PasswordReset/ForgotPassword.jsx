@@ -55,6 +55,7 @@ function ForgotPassword() {
           <label htmlFor="email">
             <p className="font-medium text-slate-700 pb-2">Email address</p>
             <input
+              id="email"
               name="email"
               type="text"
               className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"

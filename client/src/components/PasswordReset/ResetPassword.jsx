@@ -60,6 +60,7 @@ function ResetPassword() {
           <label htmlFor="password">
             <p className="font-medium text-slate-700 pb-2">Password</p>
             <input
+              id="password"
               type="password"
               name="password"
               className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
@@ -70,6 +71,7 @@ function ResetPassword() {
           <label htmlFor="reEnterPassword">
             <p className="font-medium text-slate-700 pb-2">Re-enter Password</p>
             <input
+              id="reenterPassword"
               type="password"
               name="reenterPassword"
               className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
