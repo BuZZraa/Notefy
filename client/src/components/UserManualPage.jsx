@@ -28,6 +28,9 @@ function UserManualPage() {
               <strong>Add Date:</strong> "add date" followed by the date in the format "YYYYMMDD" to add a due date to your note.
             </li>
             <li>
+              <strong>Remove date:</strong> "remove date" to clear the due date field.
+            </li>
+            <li>
               <strong>Cancel:</strong> "cancel" to cancel creating a new note.
             </li>
             <li>

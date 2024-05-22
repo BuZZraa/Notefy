@@ -38,7 +38,9 @@ function NewNote() {
       } else {
         console.error("Invalid date format provided.");
       }
-    } else if (lowerCommand.includes("cancel")) {
+    } else if (lowerCommand.includes("remove date")) {
+      dueDate.current.value=""
+    }else if (lowerCommand.includes("cancel")) {
       cancelButtonRef.current.click();
     } else if (lowerCommand.includes("save")) {
       saveButtonRef.current.click();
