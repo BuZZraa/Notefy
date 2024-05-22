@@ -134,6 +134,7 @@ function EditNote() {
     } else if (lowerCommand.includes("save")) {
       saveButtonRef.current.click();
     }
+  }
 
   return (
     <>
