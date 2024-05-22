@@ -119,12 +119,21 @@ function EditNote() {
       description.current.value = descriptionToAdd;
     } else if (lowerCommand.includes("remove description")) {
       description.current.value = "";
-    } else if (lowerCommand.includes("cancel")) {
+    } else if (lowerCommand.includes("add date")) {
+      const dateToAdd = lowerCommand.replace("add date", "").trim();
+      const formattedDate = formatDate(dateToAdd);
+      if (formattedDate) {
+        dueDate.current.value = formattedDate;
+      } else {
+        console.error("Invalid date format provided.");
+      }
+    } else if (lowerCommand.includes("remove date")) {
+      dueDate.current.value=""
+    }else if (lowerCommand.includes("cancel")) {
       cancelButtonRef.current.click();
     } else if (lowerCommand.includes("save")) {
       saveButtonRef.current.click();
     }
-  }
 
   return (
     <>
