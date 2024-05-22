@@ -121,7 +121,7 @@ function EditNote() {
       description.current.value = "";
     } else if (lowerCommand.includes("cancel")) {
       cancelButtonRef.current.click();
-    } else if (lowerCommand.includes("done")) {
+    } else if (lowerCommand.includes("save")) {
       saveButtonRef.current.click();
     }
   }
