@@ -107,6 +107,17 @@ function EditNote() {
     }
   }
 
+  function formatDate(dateString) {
+    const parts = dateString.split(" ");
+    if (parts.length === 2) {
+      const year = parts[0];
+      const month = parts[1].substring(0, 2);
+      const day = parts[1].substring(2);
+      return `${year}-${month}-${day}`;
+    }
+    return null;
+  }
+
   function handleCommand(command) {
     const lowerCommand = command.toLowerCase();
     if (lowerCommand.includes("add title")) {
@@ -135,6 +146,8 @@ function EditNote() {
       saveButtonRef.current.click();
     }
   }
+
+
 
   return (
     <>

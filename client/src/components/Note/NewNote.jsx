@@ -48,14 +48,11 @@ function NewNote() {
   }
 
   function formatDate(dateString) {
-    // Split the date string into parts
     const parts = dateString.split(" ");
     if (parts.length === 2) {
-      // Extract the year, month, and day
       const year = parts[0];
       const month = parts[1].substring(0, 2);
       const day = parts[1].substring(2);
-      // Construct and return the formatted date
       return `${year}-${month}-${day}`;
     }
     return null;
